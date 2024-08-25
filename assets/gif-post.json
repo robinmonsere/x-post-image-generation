@@ -1,0 +1,123 @@
+{
+  "__typename": "Tweet",
+  "lang": "zxx",
+  "favorite_count": 0,
+  "possibly_sensitive": false,
+  "created_at": "2024-08-25T16:07:08.000Z",
+  "display_text_range": [0, 0],
+  "entities": {
+    "hashtags": [],
+    "urls": [],
+    "user_mentions": [],
+    "symbols": [],
+    "media": [
+      {
+        "display_url": "pic.x.com/c18xmd6wbt",
+        "expanded_url": "https://twitter.com/em_tech_alerts/status/1827739494948209046/photo/1",
+        "indices": [0, 23],
+        "url": "https://t.co/C18XMd6wBT"
+      }
+    ]
+  },
+  "id_str": "1827739494948209046",
+  "text": "https://t.co/C18XMd6wBT",
+  "user": {
+    "id_str": "1827685825452167168",
+    "name": "Elon Tech Alerts",
+    "profile_image_url_https": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+    "screen_name": "em_tech_alerts",
+    "verified": false,
+    "highlighted_label": {
+      "description": "Automated",
+      "badge": {
+        "url": "https://pbs.twimg.com/semantic_core_img/1428827730364096519/4ZXpTBhS?format=png&name=orig"
+      },
+      "user_label_type": "AutomatedLabel"
+    },
+    "is_blue_verified": false
+  },
+  "edit_control": {
+    "edit_tweet_ids": [
+      "1827739494948209046"
+    ],
+    "editable_until_msecs": "1724605628000",
+    "is_edit_eligible": true,
+    "edits_remaining": "5"
+  },
+  "mediaDetails": [
+    {
+      "display_url": "pic.x.com/c18xmd6wbt",
+      "expanded_url": "https://twitter.com/em_tech_alerts/status/1827739494948209046/photo/1",
+      "ext_alt_text": "Agree GIF",
+      "ext_media_availability": {
+        "status": "Available"
+      },
+      "indices": [0, 23],
+      "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/GV1vYWmXoAAFRXj.jpg",
+      "original_info": {
+        "height": 348,
+        "width": 498,
+        "focus_rects": []
+      },
+      "sizes": {
+        "large": {
+          "h": 348,
+          "resize": "fit",
+          "w": 498
+        },
+        "medium": {
+          "h": 348,
+          "resize": "fit",
+          "w": 498
+        },
+        "small": {
+          "h": 348,
+          "resize": "fit",
+          "w": 498
+        },
+        "thumb": {
+          "h": 150,
+          "resize": "crop",
+          "w": 150
+        }
+      },
+      "type": "animated_gif",
+      "url": "https://t.co/C18XMd6wBT",
+      "video_info": {
+        "aspect_ratio": [83, 58],
+        "variants": [
+          {
+            "bitrate": 0,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/tweet_video/GV1vYWmXoAAFRXj.mp4"
+          }
+        ]
+      }
+    }
+  ],
+  "photos": [],
+  "video": {
+    "aspectRatio": [83, 58],
+    "contentType": "gif",
+    "durationMs": 0,
+    "mediaAvailability": {
+      "status": "available"
+    },
+    "poster": "https://pbs.twimg.com/tweet_video_thumb/GV1vYWmXoAAFRXj.jpg",
+    "variants": [
+      {
+        "type": "video/mp4",
+        "src": "https://video.twimg.com/tweet_video/GV1vYWmXoAAFRXj.mp4"
+      }
+    ],
+    "videoId": {
+      "type": "tweet",
+      "id": "1827739494948209046"
+    },
+    "viewCount": 0
+  },
+  "conversation_count": 0,
+  "news_action_type": "conversation",
+  "isEdited": false,
+  "isStaleEdit": false
+}

@@ -1,0 +1,162 @@
+{
+  "__typename": "Tweet",
+  "lang": "en",
+  "favorite_count": 9874,
+  "possibly_sensitive": false,
+  "created_at": "2024-08-07T14:35:57.000Z",
+  "display_text_range": [0, 62],
+  "entities": {
+    "hashtags": [],
+    "urls": [],
+    "user_mentions": [],
+    "symbols": [],
+    "media": [
+      {
+        "display_url": "pic.x.com/cc324ajye2",
+        "expanded_url": "https://twitter.com/Tesla/status/1821193568545067131/photo/1",
+        "indices": [63, 86],
+        "url": "https://t.co/cc324ajyE2"
+      }
+    ]
+  },
+  "id_str": "1821193568545067131",
+  "text": "Tesla vehicles cost the least to maintain per Consumer Reports https://t.co/cc324ajyE2",
+  "user": {
+    "id_str": "13298072",
+    "name": "Tesla",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1337607516008501250/6Ggc4S5n_normal.png",
+    "screen_name": "Tesla",
+    "verified": false,
+    "verified_type": "Business",
+    "is_blue_verified": true,
+    "profile_image_shape": "Square"
+  },
+  "edit_control": {
+    "edit_tweet_ids": [
+      "1821193568545067131"
+    ],
+    "editable_until_msecs": "1723044957000",
+    "is_edit_eligible": true,
+    "edits_remaining": "5"
+  },
+  "mediaDetails": [
+    {
+      "display_url": "pic.x.com/cc324ajye2",
+      "expanded_url": "https://twitter.com/Tesla/status/1821193568545067131/photo/1",
+      "ext_media_availability": {
+        "status": "Available"
+      },
+      "indices": [63, 86],
+      "media_url_https": "https://pbs.twimg.com/media/GUYt5NQWEAAxduc.jpg",
+      "original_info": {
+        "height": 1940,
+        "width": 1064,
+        "focus_rects": [
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1064,
+            "h": 596
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1064,
+            "h": 1064
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1064,
+            "h": 1213
+          },
+          {
+            "x": 94,
+            "y": 0,
+            "w": 970,
+            "h": 1940
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1064,
+            "h": 1940
+          }
+        ]
+      },
+      "sizes": {
+        "large": {
+          "h": 1940,
+          "resize": "fit",
+          "w": 1064
+        },
+        "medium": {
+          "h": 1200,
+          "resize": "fit",
+          "w": 658
+        },
+        "small": {
+          "h": 680,
+          "resize": "fit",
+          "w": 373
+        },
+        "thumb": {
+          "h": 150,
+          "resize": "crop",
+          "w": 150
+        }
+      },
+      "type": "photo",
+      "url": "https://t.co/cc324ajyE2"
+    }
+  ],
+  "photos": [
+    {
+      "backgroundColor": {
+        "red": 204,
+        "green": 214,
+        "blue": 221
+      },
+      "cropCandidates": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1064,
+          "h": 596
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1064,
+          "h": 1064
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1064,
+          "h": 1213
+        },
+        {
+          "x": 94,
+          "y": 0,
+          "w": 970,
+          "h": 1940
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1064,
+          "h": 1940
+        }
+      ],
+      "expandedUrl": "https://twitter.com/Tesla/status/1821193568545067131/photo/1",
+      "url": "https://pbs.twimg.com/media/GUYt5NQWEAAxduc.jpg",
+      "width": 1064,
+      "height": 1940
+    }
+  ],
+  "conversation_count": 940,
+  "news_action_type": "conversation",
+  "isEdited": false,
+  "isStaleEdit": false
+}

@@ -1,0 +1,329 @@
+{
+  "__typename": "Tweet",
+  "lang": "zxx",
+  "favorite_count": 0,
+  "possibly_sensitive": false,
+  "created_at": "2024-08-25T16:10:08.000Z",
+  "display_text_range": [0, 0],
+  "entities": {
+    "hashtags": [],
+    "urls": [],
+    "user_mentions": [],
+    "symbols": [],
+    "media": [
+      {
+        "display_url": "pic.x.com/ka7ksfyliq",
+        "expanded_url": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+        "indices": [0, 23],
+        "url": "https://t.co/Ka7KSFyLiq"
+      }
+    ]
+  },
+  "id_str": "1827740253236392216",
+  "text": "https://t.co/Ka7KSFyLiq",
+  "user": {
+    "id_str": "1827685825452167168",
+    "name": "Elon Tech Alerts",
+    "profile_image_url_https": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+    "screen_name": "em_tech_alerts",
+    "verified": false,
+    "highlighted_label": {
+      "description": "Automated",
+      "badge": {
+        "url": "https://pbs.twimg.com/semantic_core_img/1428827730364096519/4ZXpTBhS?format=png&name=orig"
+      },
+      "user_label_type": "AutomatedLabel"
+    },
+    "is_blue_verified": false
+  },
+  "edit_control": {
+    "edit_tweet_ids": [
+      "1827740253236392216"
+    ],
+    "editable_until_msecs": "1724605808000",
+    "is_edit_eligible": true,
+    "edits_remaining": "5"
+  },
+  "mediaDetails": [
+    {
+      "display_url": "pic.x.com/ka7ksfyliq",
+      "expanded_url": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "ext_media_availability": {
+        "status": "Available"
+      },
+      "indices": [0, 23],
+      "media_url_https": "https://pbs.twimg.com/media/GV1wBeDXEAEmZ1k.jpg",
+      "original_info": {
+        "height": 1438,
+        "width": 2210,
+        "focus_rects": [
+          {
+            "x": 0,
+            "y": 0,
+            "w": 2210,
+            "h": 1238
+          },
+          {
+            "x": 551,
+            "y": 0,
+            "w": 1438,
+            "h": 1438
+          },
+          {
+            "x": 640,
+            "y": 0,
+            "w": 1261,
+            "h": 1438
+          },
+          {
+            "x": 911,
+            "y": 0,
+            "w": 719,
+            "h": 1438
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 2210,
+            "h": 1438
+          }
+        ]
+      },
+      "sizes": {
+        "large": {
+          "h": 1333,
+          "resize": "fit",
+          "w": 2048
+        },
+        "medium": {
+          "h": 781,
+          "resize": "fit",
+          "w": 1200
+        },
+        "small": {
+          "h": 442,
+          "resize": "fit",
+          "w": 680
+        },
+        "thumb": {
+          "h": 150,
+          "resize": "crop",
+          "w": 150
+        }
+      },
+      "type": "photo",
+      "url": "https://t.co/Ka7KSFyLiq"
+    },
+    {
+      "display_url": "pic.x.com/ka7ksfyliq",
+      "expanded_url": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "ext_media_availability": {
+        "status": "Available"
+      },
+      "indices": [0, 23],
+      "media_url_https": "https://pbs.twimg.com/media/GV1wCg0XQAAVmdp.png",
+      "original_info": {
+        "height": 1260,
+        "width": 1040,
+        "focus_rects": [
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1040,
+            "h": 582
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1040,
+            "h": 1040
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1040,
+            "h": 1186
+          },
+          {
+            "x": 205,
+            "y": 0,
+            "w": 630,
+            "h": 1260
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1040,
+            "h": 1260
+          }
+        ]
+      },
+      "sizes": {
+        "large": {
+          "h": 1260,
+          "resize": "fit",
+          "w": 1040
+        },
+        "medium": {
+          "h": 1200,
+          "resize": "fit",
+          "w": 990
+        },
+        "small": {
+          "h": 680,
+          "resize": "fit",
+          "w": 561
+        },
+        "thumb": {
+          "h": 150,
+          "resize": "crop",
+          "w": 150
+        }
+      },
+      "type": "photo",
+      "url": "https://t.co/Ka7KSFyLiq"
+    },
+    {
+      "display_url": "pic.x.com/ka7ksfyliq",
+      "expanded_url": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "ext_media_availability": {
+        "status": "Available"
+      },
+      "indices": [0, 23],
+      "media_url_https": "https://pbs.twimg.com/media/GV1wEg_XcAEO8lQ.png",
+      "original_info": {
+        "height": 150,
+        "width": 113,
+        "focus_rects": []
+      },
+      "sizes": {
+        "large": {
+          "h": 150,
+          "resize": "fit",
+          "w": 113
+        },
+        "medium": {
+          "h": 150,
+          "resize": "fit",
+          "w": 113
+        },
+        "small": {
+          "h": 150,
+          "resize": "fit",
+          "w": 113
+        },
+        "thumb": {
+          "h": 113,
+          "resize": "crop",
+          "w": 113
+        }
+      },
+      "type": "photo",
+      "url": "https://t.co/Ka7KSFyLiq"
+    }
+  ],
+  "photos": [
+    {
+      "backgroundColor": {
+        "red": 204,
+        "green": 214,
+        "blue": 221
+      },
+      "cropCandidates": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 2210,
+          "h": 1238
+        },
+        {
+          "x": 551,
+          "y": 0,
+          "w": 1438,
+          "h": 1438
+        },
+        {
+          "x": 640,
+          "y": 0,
+          "w": 1261,
+          "h": 1438
+        },
+        {
+          "x": 911,
+          "y": 0,
+          "w": 719,
+          "h": 1438
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 2210,
+          "h": 1438
+        }
+      ],
+      "expandedUrl": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "url": "https://pbs.twimg.com/media/GV1wBeDXEAEmZ1k.jpg",
+      "width": 2210,
+      "height": 1438
+    },
+    {
+      "backgroundColor": {
+        "red": 204,
+        "green": 214,
+        "blue": 221
+      },
+      "cropCandidates": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1040,
+          "h": 582
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1040,
+          "h": 1040
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1040,
+          "h": 1186
+        },
+        {
+          "x": 205,
+          "y": 0,
+          "w": 630,
+          "h": 1260
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "w": 1040,
+          "h": 1260
+        }
+      ],
+      "expandedUrl": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "url": "https://pbs.twimg.com/media/GV1wCg0XQAAVmdp.png",
+      "width": 1040,
+      "height": 1260
+    },
+    {
+      "backgroundColor": {
+        "red": 204,
+        "green": 214,
+        "blue": 221
+      },
+      "cropCandidates": [],
+      "expandedUrl": "https://twitter.com/em_tech_alerts/status/1827740253236392216/photo/1",
+      "url": "https://pbs.twimg.com/media/GV1wEg_XcAEO8lQ.png",
+      "width": 113,
+      "height": 150
+    }
+  ],
+  "conversation_count": 0,
+  "news_action_type": "conversation",
+  "isEdited": false,
+  "isStaleEdit": false
+}

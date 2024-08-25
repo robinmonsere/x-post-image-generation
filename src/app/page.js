@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main>
       <div className="dark">
-        <Tweet id="1825888113224266042" />
+        <Tweet id="1827370928759550234" />
       </div>
     </main>
   );
