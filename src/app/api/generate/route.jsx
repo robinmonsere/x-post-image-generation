@@ -5,6 +5,13 @@ import { Tweet } from 'react-tweet'
 // App router includes @vercel/og.
 // No need to install it.
 
+const width = 1040;
+const postWidth = 832;
+/*
+    width - 2x padding - big profile - margin
+    1040 - 48 * 2 - 96 - 16 = 832
+*/
+
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const tweetID = searchParams.get('id');
@@ -38,20 +45,17 @@ export async function GET(request) {
 
     //console.log(tweet);
     let user = tweet.data.user;
-    const hasBadge = user.highlighted_label !== undefined;
-    const isSquare = user.profile_image_shape === 'Square';
-    const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
-    // console.log(profileImage);
-    const checkMarkColor = user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
     // console.log(user.highlighted_label);
     const hasMedia = tweet.data.mediaDetails !== undefined;
     const isRepost = false;
+    const isQuote = false;
+    const isReply = tweet.data.parent !== undefined;
 
 
     const baseHeight = 296;
     const baseImageHeight = 1600;
     const imageHeight = hasMedia ? tweet.data.mediaDetails[0].original_info.height : 0;
-    const height = baseHeight + imageHeight;
+    const height = baseHeight + imageHeight + 1000;
 
 
     /*
@@ -88,12 +92,14 @@ export async function GET(request) {
                     fontSize: '32px',
                     backgroundColor: '#15202b',
                     color: '#fff',
-                    border: '2px solid #fff',
-                    borderRadius: '8px',
                     padding: '48px',
                     fontStyle: "italic !important",
                 }}
             >
+                {isReply ? (
+                    getParentPost(tweet.data.parent)
+                ) : null}
+
                 {isRepost ? (
                     <div style={{
                         display: 'flex',
@@ -121,69 +127,7 @@ export async function GET(request) {
                         }}>Elon Musk Reposted</p>
                     </div>
                     ) : null}
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        height: '96px',
-                        width: '100%',
-                    }}
-                >
-                    <img style={{
-                        borderRadius: isSquare ? '5%' : '50%',
-                        height: '96px',
-                        width: '96px',
-                        marginRight: '16px',
-                    }} src={profileImage} alt=""/>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <div
-                            style={{
-                                marginTop: "0",
-                                display: "flex",
-                                flexDirection: "row",
-                                height: "48px",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    marginTop: "0",
-                                    marginRight: '4px',
-                                    fontFamily: "Chirp-Heavy",
-                                }}
-                            >{user.name}</p>
-                            {(user.is_blue_verified) ? (
-                                <svg viewBox="0 0 48 48" width="48" height="48">
-                                    <g>
-                                        <path
-                                            fill={checkMarkColor}
-                                            d="M40.792 22c-.036-1.292-.43-2.55-1.14-3.632-.708-1.08-1.704-1.944-2.876-2.492.446-1.214.54-2.528.28-3.794-.262-1.268-.874-2.436-1.764-3.374-.94-.89-2.106-1.5-3.374-1.764-1.266-.26-2.58-.166-3.794.28-.546-1.174-1.408-2.172-2.49-2.88S23.293 3.24 22 3.208c-1.292.034-2.546.426-3.626 1.136-1.08.71-1.938 1.708-2.48 2.88-1.216-.446-2.534-.544-3.804-.28-1.27.26-2.44.872-3.38 1.764-.89.94-1.5 2.106-1.756 3.374-.26 1.266-.16 2.58.288 3.792-1.174.548-2.174 1.41-2.886 2.49-.712 1.082-1.11 2.34-1.148 3.63.04 1.294.436 2.552 1.15 3.634.712 1.08 1.712 1.944 2.886 2.49-.448 1.214-.546 2.528-.288 3.792.262 1.268.872 2.436 1.754 3.374.94.886 2.106 1.494 3.374 1.756 1.266.264 2.58.168 3.794-.272.548 1.172 1.41 2.17 2.49 2.878 1.082.708 2.34 1.104 3.632 1.136 1.292-.032 2.55-.426 3.634-1.134 1.08-.71 1.944-1.706 2.49-2.88 1.208.478 2.532.592 3.806.328 1.27-.264 2.44-.894 3.36-1.814.92-.92 1.552-2.088 1.816-3.364.464-1.172.15-2.598-.33-3.806 1.172-.548 2.172-1.41 2.878-2.492.708-1.082 1.104-2.34 1.138-3.63zM19.324 29.7l-6.858-6.856 2.586-2.604 4.144 4.144 8.8-9.588 2.694 2.492z"
-                                        />
-                                    </g>
-                                </svg>
-                            ) : null}
-                            {(hasBadge) ? (
-                                <img style={
-                                    {
-                                        height: '40px',
-                                        width: '40px',
-                                        borderRadius: '15%',
-                                    }
-                                } src={user.highlighted_label.badge.url} alt=""/>
-                            ) : null}
-                        </div>
-                        <p
-                            style={{
-                                marginTop: "0",
-                                color: "#71767b",
-                            }}
-                        >@{user.screen_name}</p>
-                    </div>
-                </div>
+                {getProfileSection(user, false)}
                 <div style={{
                     marginTop: '24px',
                     display:"flex",
@@ -211,7 +155,7 @@ export async function GET(request) {
             </div>
         ),
         {
-            width: 1040,
+            width: width,
             height: height,
             fonts: [
                 {
@@ -247,6 +191,339 @@ export async function GET(request) {
     );
 }
 
+function getProfileSection(user, isCollapsed) {
+    const hasBadge = user.highlighted_label !== undefined;
+    const isSquare = user.profile_image_shape === 'Square';
+    const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
+    // console.log(profileImage);
+    const checkMarkColor = user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
+
+    const height = isCollapsed ? '48px' : '96px';
+    const width = isCollapsed ? '48px' : '96px';
+
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                height: height,
+                width: '100%',
+            }}
+        >
+            <img style={{
+                borderRadius: isSquare ? '5%' : '50%',
+                height: height,
+                width: width,
+                marginRight: '16px',
+            }} src={profileImage} alt=""/>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: isCollapsed ? "row" : "column",
+                }}
+            >
+                <div
+                    style={{
+                        marginTop: "0",
+                        marginBottom: '0',
+                        display: "flex",
+                        flexDirection: "row",
+                        height: "48px",
+                        alignItems: 'center',
+                    }}
+                >
+                    <p
+                        style={{
+                            marginTop: "0",
+                            marginBottom: '0',
+                            marginRight: '4px',
+                            fontFamily: "Chirp-Heavy",
+                        }}
+                    >{user.name}</p>
+                    {(user.is_blue_verified) ? (
+                        // to change size of svg, just change the height
+                        <svg viewBox="2 2 18 18" height="32">
+                            <g>
+                                <path  fill={checkMarkColor} d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z">
+                                </path>
+
+                            </g>
+                        </svg>
+                    ) : null}
+                    {(hasBadge) ? (
+                        <img style={
+                            {
+                                height: '32px',
+                                width: '32px',
+                                borderRadius: '15%',
+                                marginLeft: '8px',
+                            }
+                        } src={user.highlighted_label.badge.url} alt=""/>
+                    ) : null}
+                </div>
+                <div style={{
+                    marginTop: "0",
+                    marginBottom: '0',
+                    display: "flex",
+                    flexDirection: "row",
+                    height: "48px",
+                    alignItems: 'center',
+                }}>
+                    <p
+                        style={{
+                            marginTop: "0",
+                            marginBottom: '0',
+                            color: "#71767b",
+                            marginLeft: isCollapsed ? '16px' : '0',
+                        }}
+                    >@{user.screen_name}</p>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+function getParentPost(parent) {
+    const hasMedia = parent.mediaDetails !== undefined;
+    const isQuote = parent.quoted_tweet !== undefined;
+    return (
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+        }}>
+            {getProfileSection(parent.user, false)}
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                <div style={{
+                    marginRight: '16px',
+                    width: '96px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <div style={{
+                        margin: '0',
+                        width: '1px',
+                        height: '100%',
+                        backgroundColor: '#8899a6',
+                    }}></div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
+                    <p style={{ whiteSpace: "pre-line", margin: 0, fontSize: "32"}}> {
+                        parent.text.slice(parent.display_text_range[0], parent.display_text_range[1])
+                    }</p>
+                    {(hasMedia) ? (
+                        <img style={{
+                            marginTop: '24px',
+                            borderRadius: '8px',
+                            maxWidth: '100%',
+                            maxHeight: '500px',
+                            // objectFit: 'cover',
+                        }} src={parent.mediaDetails[0].media_url_https} alt=""/>
+                    ) : null}
+                    {(isQuote) ? (
+                        getQuoteSection(parent.quoted_tweet)
+                    ) : null}
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+function getQuoteSection(quote) {
+    const sectionSize = 168;
+    /*
+    height calc
+
+    padding top = 16px
+    profile section = 48px
+    profile bottom padding = 8px
+
+    section 168px --> max height
+
+    padding bottom = 16px
+    total: 256px
+    */
+
+    const hasMedia = quote.mediaDetails !== undefined;
+
+    return (
+        <div style={{
+            display: 'flex',
+            borderRadius: '16px',
+            border: '2px solid #38444d',
+            padding: '16px',
+            flexDirection: 'column',
+            maxHeight:'256px',
+            width: postWidth,
+            marginTop: '8px',
+        }}>
+            {getProfileSection(quote.user, true)}
+            <div style={{
+                marginTop: '8px',
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                {(hasMedia) ? (
+                    getMediaBySize(quote.mediaDetails, sectionSize, sectionSize)
+                ) : null}
+                <p style={{ whiteSpace: "pre-line", margin: 0, fontSize: "32", textWrap: "wrap"}}> {
+                    quote.text.slice(quote.display_text_range[0], quote.display_text_range[1])
+                }</p>
+            </div>
+        </div>
+    );
+}
+
+function getMediaBySize(mediaDetails, height, width) {
+    return (
+        <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: width,
+            height: height,
+            borderRadius: '24px',
+            gap: '2px',
+            overflow: 'hidden',
+        }}>
+            {(mediaDetails.length === 4) ? (
+                <>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                        <img
+                            src={mediaDetails[0].media_url_https}
+                            alt="media-1"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                        <div style={{height:'2px'}}></div>
+                        <img
+                            src={mediaDetails[1].media_url_https}
+                            alt="media-1"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </div>
+                    <div style={{width:'2px'}}></div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                        <img
+                            src={mediaDetails[2].media_url_https}
+                            alt="media-1"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                        <div style={{height:'2px'}}></div>
+                        <img
+                            src={mediaDetails[3].media_url_https}
+                            alt="media-1"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </div>
+                </>
+            ) : null
+            }
+            {(mediaDetails.length === 3) ? (
+                <>
+                    <img
+                        src={mediaDetails[0].media_url_https}
+                        alt="media-0"
+                        style={{
+                            width: width / 2,
+                            height: height,
+                            objectFit: 'cover',
+                        }}
+                    />
+                    <div style={{width:'2px'}}></div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                        <img
+                            src={mediaDetails[1].media_url_https}
+                            alt="media-1"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                        <div style={{height:'2px'}}></div>
+                        <img
+                            src={mediaDetails[2].media_url_https}
+                            alt="media-2"
+                            style={{
+                                width: width / 2,
+                                height: height / 2,
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </div>
+                </>
+            ) : null}
+            {(mediaDetails.length === 2) ? (
+                <>
+                    <img
+                        src={mediaDetails[0].media_url_https}
+                        alt="media-0"
+                        style={{
+                            width: width / 2,
+                            height: height,
+                            objectFit: 'cover',
+                        }}
+                    />
+                    <div style={{width:'2px'}}></div>
+                    <img
+                        src={mediaDetails[1].media_url_https}
+                        alt="media-1"
+                        style={{
+                            width: width / 2,
+                            height: height,
+                            objectFit: 'cover',
+                        }}
+                    />
+                </>
+            ) : null}
+            {(mediaDetails.length === 1) ? (
+                <img
+                    src={mediaDetails[0].media_url_https}
+                    alt="media-0"
+                    style={{
+                        width: width,
+                        height: height,
+                        objectFit: 'cover',
+                    }}
+                />
+            ) : null}
+        </div>
+    )
+
+}
 function getFormattedDate(timestamp) {
     // Create a Date object
     const date = new Date(timestamp);

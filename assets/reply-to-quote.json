@@ -1,0 +1,710 @@
+{
+  "__typename": "Tweet",
+  "in_reply_to_screen_name": "SawyerMerritt",
+  "in_reply_to_status_id_str": "1827700717139763276",
+  "in_reply_to_user_id_str": "243013409",
+  "lang": "en",
+  "favorite_count": 2264,
+  "created_at": "2024-08-26T03:43:13.000Z",
+  "display_text_range": [15, 153],
+  "entities": {
+    "hashtags": [],
+    "urls": [],
+    "user_mentions": [
+      {
+        "id_str": "243013409",
+        "indices": [0, 14],
+        "name": "Sawyer Merritt",
+        "screen_name": "SawyerMerritt"
+      }
+    ],
+    "symbols": []
+  },
+  "id_str": "1827914673586397680",
+  "text": "@SawyerMerritt The astronauts will be the furthest from Earth since the Apollo Moon missions and do a spacewalk that is also the furthest from Earth ever",
+  "user": {
+    "id_str": "44196397",
+    "name": "Elon Musk",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1815749056821346304/jS8I28PL_normal.jpg",
+    "screen_name": "elonmusk",
+    "verified": false,
+    "highlighted_label": {
+      "description": "X",
+      "badge": {
+        "url": "https://pbs.twimg.com/profile_images/1683899100922511378/5lY42eHs_bigger.jpg"
+      },
+      "url": {
+        "url": "https://twitter.com/X",
+        "url_type": "DeepLink"
+      },
+      "user_label_type": "BusinessLabel",
+      "user_label_display_type": "Badge"
+    },
+    "is_blue_verified": true
+  },
+  "edit_control": {
+    "edit_tweet_ids": [
+      "1827914673586397680"
+    ],
+    "editable_until_msecs": "1724647393000",
+    "is_edit_eligible": false,
+    "edits_remaining": "5"
+  },
+  "conversation_count": 280,
+  "news_action_type": "conversation",
+  "parent": {
+    "lang": "en",
+    "reply_count": 46,
+    "retweet_count": 221,
+    "favorite_count": 3060,
+    "possibly_sensitive": false,
+    "created_at": "2024-08-25T13:33:02.000Z",
+    "display_text_range": [0, 56],
+    "entities": {
+      "hashtags": [],
+      "urls": [],
+      "user_mentions": [],
+      "symbols": [],
+      "media": [
+        {
+          "display_url": "pic.x.com/nu0kyozhdz",
+          "expanded_url": "https://twitter.com/SawyerMerritt/status/1827700717139763276/photo/1",
+          "indices": [57, 80],
+          "url": "https://t.co/nU0kyozhdZ"
+        }
+      ]
+    },
+    "id_str": "1827700717139763276",
+    "text": "This is going to be the coolest launch/mission in years. https://t.co/nU0kyozhdZ",
+    "user": {
+      "id_str": "243013409",
+      "name": "Sawyer Merritt",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1756731259961683968/MljVGgIm_normal.jpg",
+      "screen_name": "SawyerMerritt",
+      "verified": false,
+      "is_blue_verified": true,
+      "profile_image_shape": "Circle"
+    },
+    "edit_control": {
+      "edit_tweet_ids": [
+        "1827700717139763276"
+      ],
+      "editable_until_msecs": "1724596382000",
+      "is_edit_eligible": true,
+      "edits_remaining": "5"
+    },
+    "mediaDetails": [
+      {
+        "display_url": "pic.x.com/nu0kyozhdz",
+        "expanded_url": "https://twitter.com/SawyerMerritt/status/1827700717139763276/photo/1",
+        "ext_media_availability": {
+          "status": "Available"
+        },
+        "indices": [57, 80],
+        "media_url_https": "https://pbs.twimg.com/media/GV1L_tSXYAACzI0.jpg",
+        "original_info": {
+          "height": 1667,
+          "width": 2500,
+          "focus_rects": [
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1400
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 1667,
+              "h": 1667
+            },
+            {
+              "x": 81,
+              "y": 0,
+              "w": 1462,
+              "h": 1667
+            },
+            {
+              "x": 395,
+              "y": 0,
+              "w": 834,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1667
+            }
+          ]
+        },
+        "sizes": {
+          "large": {
+            "h": 1366,
+            "resize": "fit",
+            "w": 2048
+          },
+          "medium": {
+            "h": 800,
+            "resize": "fit",
+            "w": 1200
+          },
+          "small": {
+            "h": 453,
+            "resize": "fit",
+            "w": 680
+          },
+          "thumb": {
+            "h": 150,
+            "resize": "crop",
+            "w": 150
+          }
+        },
+        "type": "photo",
+        "url": "https://t.co/nU0kyozhdZ"
+      }
+    ],
+    "photos": [
+      {
+        "backgroundColor": {
+          "red": 204,
+          "green": 214,
+          "blue": 221
+        },
+        "cropCandidates": [
+          {
+            "x": 0,
+            "y": 0,
+            "w": 2500,
+            "h": 1400
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 1667,
+            "h": 1667
+          },
+          {
+            "x": 81,
+            "y": 0,
+            "w": 1462,
+            "h": 1667
+          },
+          {
+            "x": 395,
+            "y": 0,
+            "w": 834,
+            "h": 1667
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 2500,
+            "h": 1667
+          }
+        ],
+        "expandedUrl": "https://twitter.com/SawyerMerritt/status/1827700717139763276/photo/1",
+        "url": "https://pbs.twimg.com/media/GV1L_tSXYAACzI0.jpg",
+        "width": 2500,
+        "height": 1667
+      }
+    ],
+    "quoted_tweet": {
+      "lang": "en",
+      "reply_count": 96,
+      "retweet_count": 450,
+      "favorite_count": 4055,
+      "possibly_sensitive": false,
+      "created_at": "2024-08-25T13:25:40.000Z",
+      "display_text_range": [0, 108],
+      "entities": {
+        "hashtags": [],
+        "urls": [
+          {
+            "display_url": "flickr.com/photos/polaris…",
+            "expanded_url": "http://www.flickr.com/photos/polarisprogramphotos/",
+            "indices": [85, 108],
+            "url": "https://t.co/zktZ1R453H"
+          }
+        ],
+        "user_mentions": [],
+        "symbols": [],
+        "media": [
+          {
+            "display_url": "pic.x.com/0yhiya7fjp",
+            "expanded_url": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+            "indices": [109, 132],
+            "url": "https://t.co/0yHIya7fJP"
+          }
+        ]
+      },
+      "id_str": "1827698863651651803",
+      "text": "More photos from Polaris Dawn and SpaceX’s full rehearsal of launch day activities → https://t.co/zktZ1R453H https://t.co/0yHIya7fJP",
+      "user": {
+        "id_str": "1460368790143778820",
+        "name": "Polaris",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1492978945309831168/qxqYf-uK_normal.jpg",
+        "screen_name": "PolarisProgram",
+        "verified": false,
+        "is_blue_verified": true,
+        "profile_image_shape": "Circle"
+      },
+      "mediaDetails": [
+        {
+          "display_url": "pic.x.com/0yhiya7fjp",
+          "expanded_url": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "ext_media_availability": {
+            "status": "Available"
+          },
+          "indices": [109, 132],
+          "media_url_https": "https://pbs.twimg.com/media/GV1JD1hXMAAD_8P.jpg",
+          "original_info": {
+            "height": 1667,
+            "width": 2500,
+            "focus_rects": [
+              {
+                "x": 0,
+                "y": 267,
+                "w": 2500,
+                "h": 1400
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 1667,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 1462,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 834,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1667
+              }
+            ]
+          },
+          "sizes": {
+            "large": {
+              "h": 1366,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 800,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 453,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/0yHIya7fJP"
+        },
+        {
+          "display_url": "pic.x.com/0yhiya7fjp",
+          "expanded_url": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "ext_media_availability": {
+            "status": "Available"
+          },
+          "indices": [109, 132],
+          "media_url_https": "https://pbs.twimg.com/media/GV1JD1kWIAAFmAD.jpg",
+          "original_info": {
+            "height": 1667,
+            "width": 2500,
+            "focus_rects": [
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1400
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 1667,
+                "h": 1667
+              },
+              {
+                "x": 81,
+                "y": 0,
+                "w": 1462,
+                "h": 1667
+              },
+              {
+                "x": 395,
+                "y": 0,
+                "w": 834,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1667
+              }
+            ]
+          },
+          "sizes": {
+            "large": {
+              "h": 1366,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 800,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 453,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/0yHIya7fJP"
+        },
+        {
+          "display_url": "pic.x.com/0yhiya7fjp",
+          "expanded_url": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "ext_media_availability": {
+            "status": "Available"
+          },
+          "indices": [109, 132],
+          "media_url_https": "https://pbs.twimg.com/media/GV1JD1kWkAAf6vv.jpg",
+          "original_info": {
+            "height": 1667,
+            "width": 2500,
+            "focus_rects": [
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1400
+              },
+              {
+                "x": 604,
+                "y": 0,
+                "w": 1667,
+                "h": 1667
+              },
+              {
+                "x": 706,
+                "y": 0,
+                "w": 1462,
+                "h": 1667
+              },
+              {
+                "x": 1020,
+                "y": 0,
+                "w": 834,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1667
+              }
+            ]
+          },
+          "sizes": {
+            "large": {
+              "h": 1366,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 800,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 453,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/0yHIya7fJP"
+        },
+        {
+          "display_url": "pic.x.com/0yhiya7fjp",
+          "expanded_url": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "ext_media_availability": {
+            "status": "Available"
+          },
+          "indices": [109, 132],
+          "media_url_https": "https://pbs.twimg.com/media/GV1JD1gXwAAt8z8.jpg",
+          "original_info": {
+            "height": 1667,
+            "width": 2500,
+            "focus_rects": [
+              {
+                "x": 0,
+                "y": 267,
+                "w": 2500,
+                "h": 1400
+              },
+              {
+                "x": 354,
+                "y": 0,
+                "w": 1667,
+                "h": 1667
+              },
+              {
+                "x": 456,
+                "y": 0,
+                "w": 1462,
+                "h": 1667
+              },
+              {
+                "x": 770,
+                "y": 0,
+                "w": 834,
+                "h": 1667
+              },
+              {
+                "x": 0,
+                "y": 0,
+                "w": 2500,
+                "h": 1667
+              }
+            ]
+          },
+          "sizes": {
+            "large": {
+              "h": 1366,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 800,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 453,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/0yHIya7fJP"
+        }
+      ],
+      "photos": [
+        {
+          "backgroundColor": {
+            "red": 204,
+            "green": 214,
+            "blue": 221
+          },
+          "cropCandidates": [
+            {
+              "x": 0,
+              "y": 267,
+              "w": 2500,
+              "h": 1400
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 1667,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 1462,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 834,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1667
+            }
+          ],
+          "expandedUrl": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "url": "https://pbs.twimg.com/media/GV1JD1hXMAAD_8P.jpg",
+          "width": 2500,
+          "height": 1667
+        },
+        {
+          "backgroundColor": {
+            "red": 204,
+            "green": 214,
+            "blue": 221
+          },
+          "cropCandidates": [
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1400
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 1667,
+              "h": 1667
+            },
+            {
+              "x": 81,
+              "y": 0,
+              "w": 1462,
+              "h": 1667
+            },
+            {
+              "x": 395,
+              "y": 0,
+              "w": 834,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1667
+            }
+          ],
+          "expandedUrl": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "url": "https://pbs.twimg.com/media/GV1JD1kWIAAFmAD.jpg",
+          "width": 2500,
+          "height": 1667
+        },
+        {
+          "backgroundColor": {
+            "red": 204,
+            "green": 214,
+            "blue": 221
+          },
+          "cropCandidates": [
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1400
+            },
+            {
+              "x": 604,
+              "y": 0,
+              "w": 1667,
+              "h": 1667
+            },
+            {
+              "x": 706,
+              "y": 0,
+              "w": 1462,
+              "h": 1667
+            },
+            {
+              "x": 1020,
+              "y": 0,
+              "w": 834,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1667
+            }
+          ],
+          "expandedUrl": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "url": "https://pbs.twimg.com/media/GV1JD1kWkAAf6vv.jpg",
+          "width": 2500,
+          "height": 1667
+        },
+        {
+          "backgroundColor": {
+            "red": 204,
+            "green": 214,
+            "blue": 221
+          },
+          "cropCandidates": [
+            {
+              "x": 0,
+              "y": 267,
+              "w": 2500,
+              "h": 1400
+            },
+            {
+              "x": 354,
+              "y": 0,
+              "w": 1667,
+              "h": 1667
+            },
+            {
+              "x": 456,
+              "y": 0,
+              "w": 1462,
+              "h": 1667
+            },
+            {
+              "x": 770,
+              "y": 0,
+              "w": 834,
+              "h": 1667
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "w": 2500,
+              "h": 1667
+            }
+          ],
+          "expandedUrl": "https://twitter.com/PolarisProgram/status/1827698863651651803/photo/1",
+          "url": "https://pbs.twimg.com/media/GV1JD1gXwAAt8z8.jpg",
+          "width": 2500,
+          "height": 1667
+        }
+      ]
+    },
+    "isEdited": false,
+    "isStaleEdit": false
+  },
+  "isEdited": false,
+  "isStaleEdit": false
+}
