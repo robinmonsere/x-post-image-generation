@@ -1,16 +1,44 @@
 import { ImageResponse } from 'next/og';
+
 export const runtime = 'edge'
-import { Tweet } from 'react-tweet'
+import { createCanvas } from "canvas";
 
 // App router includes @vercel/og.
 // No need to install it.
 
 const width = 1040;
-const postWidth = 832;
 /*
     width - 2x padding - big profile - margin
     1040 - 48 * 2 - 96 - 16 = 832
 */
+
+const postWidth = 944;
+/*
+    width - 2x padding
+ */
+
+const parentPostWidth = 832;
+/*
+    width - 2x padding - profile - margin
+ */
+const baseImageHeight = 550;
+
+const baseHeight = 168;
+/*
+  height calc
+
+  always:
+  48px padding top
+  24px padding top on text
+  24px padding top on date
+  24px font date text
+  48px padding bottom
+  = 168
+
+  24px padding top on media
+
+   */
+let totalHeight = baseHeight;
 
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
@@ -32,54 +60,19 @@ export async function GET(request) {
         new URL('../../../../assets/Chirp-Heavy.ttf', import.meta.url),
     ).then((res) => res.arrayBuffer());
 
-    //let tweet = await fetchTweet('1827358911328129133');
-    //let tweet = await fetchTweet('1827664316193009917');
-    //let tweet = await fetchTweet('1821193568545067131');
-
-    //short post
-    //let tweet = await fetchTweet('1827753905800818999');
-
-    // long post
-    //let tweet = await fetchTweet('1827658235618144257');
     let tweet = await fetchTweet(tweetID);
+
+    totalHeight = baseHeight;
 
     //console.log(tweet);
     let user = tweet.data.user;
     // console.log(user.highlighted_label);
     const hasMedia = tweet.data.mediaDetails !== undefined;
     const isRepost = false;
-    const isQuote = false;
+    const isQuote = tweet.data.quoted_tweet !== undefined;
     const isReply = tweet.data.parent !== undefined;
 
 
-    const baseHeight = 296;
-    const baseImageHeight = 1600;
-    const imageHeight = hasMedia ? tweet.data.mediaDetails[0].original_info.height : 0;
-    const height = baseHeight + imageHeight + 1000;
-
-
-    /*
-    height calc
-
-    always:
-    48px padding top
-    96px profile image
-    24px padding top on text
-    32px font text
-    24px padding top on date
-    24px font date text
-    48px padding bottom
-    =
-
-
-
-    24px padding top on media
-
-     */
-
-    console.log(height);
-
-    console.log(hasMedia);
     return new ImageResponse(
         (
             <div
@@ -93,13 +86,11 @@ export async function GET(request) {
                     backgroundColor: '#15202b',
                     color: '#fff',
                     padding: '48px',
-                    fontStyle: "italic !important",
                 }}
             >
                 {isReply ? (
                     getParentPost(tweet.data.parent)
                 ) : null}
-
                 {isRepost ? (
                     <div style={{
                         display: 'flex',
@@ -127,23 +118,18 @@ export async function GET(request) {
                         }}>Elon Musk Reposted</p>
                     </div>
                     ) : null}
-                {getProfileSection(user, false)}
-                <div style={{
-                    marginTop: '24px',
-                    display:"flex",
-                }}>
-                    <p style={{ whiteSpace: "pre-line", margin: 0, fontSize: "32"}}> {
-                      tweet.data.text.slice(tweet.data.display_text_range[0], tweet.data.display_text_range[1])
-                    }</p>
-                   </div>
+                {getProfileSection(user, false, false)}
+                {getTextSection(tweet.data.text, tweet.data.display_text_range, postWidth, "24px 0 0 0")}
                 {(hasMedia) ? (
-                    <img style={{
-                        marginTop: '24px',
-                        borderRadius: '8px',
-                        maxWidth: '100%',
-                        maxHeight: imageHeight,
-                       // objectFit: 'cover',
-                    }} src={tweet.data.mediaDetails[0].media_url_https} alt=""/>
+                        <div style={{
+                            display: 'flex',
+                            marginTop: '24px',
+                        }}>
+                            {getMediaBySize(tweet.data.mediaDetails, baseImageHeight, postWidth)}
+                        </div>
+                ) : null}
+                {isQuote ? (
+                    getQuoteSection(tweet.data.quoted_tweet, postWidth)
                 ) : null}
                 <p
                     style={{
@@ -156,7 +142,7 @@ export async function GET(request) {
         ),
         {
             width: width,
-            height: height,
+            height: totalHeight,
             fonts: [
                 {
                     data: chirp_regular,
@@ -183,24 +169,50 @@ export async function GET(request) {
                     weight: 800,
                 },
             ],
-
-
-
         },
 
     );
 }
 
-function getProfileSection(user, isCollapsed) {
+function getTextSection(text, displayRange, width, margin) {
+    const textHeight = getSizeByText(text, width, 32);
+
+    console.log("Adding height for text: ", textHeight);
+    totalHeight = totalHeight + textHeight;
+    return (
+        <div style={{
+            margin: margin ?? '0',
+            display:"flex",
+            height: textHeight,
+            width: width,
+        }}>
+            <p style={{
+                whiteSpace: "pre-line",
+                margin: 0,
+                fontSize: "32",
+                textWrap: "wrap",
+                width: width,
+                wordWrap: "break-word",
+                // known bug with 1827400923154366799 on @NASA_astronauts
+                // wordBreak: "break-all",
+            }}>
+                {text.slice(displayRange[0], displayRange[1])}
+            </p>
+        </div>
+    )
+}
+
+function getProfileSection(user, isDense, isOneLine) {
     const hasBadge = user.highlighted_label !== undefined;
     const isSquare = user.profile_image_shape === 'Square';
     const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
-    // console.log(profileImage);
     const checkMarkColor = user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
 
-    const height = isCollapsed ? '48px' : '96px';
-    const width = isCollapsed ? '48px' : '96px';
+    const height = isDense ? 48 : 96;
+    const width = isDense ? 48 : 96;
 
+    console.log("Adding height for profile picture: ", height)
+    totalHeight = totalHeight + height;
 
     return (
         <div
@@ -220,16 +232,20 @@ function getProfileSection(user, isCollapsed) {
             <div
                 style={{
                     display: "flex",
-                    flexDirection: isCollapsed ? "row" : "column",
+                    justifyContent: 'center',
+                    alignItems: isOneLine ? 'center' : 'flex-start',
+                    flexDirection: isOneLine ? "row" : "column",
                 }}
             >
+
                 <div
                     style={{
+                        //backgroundColor: "#1f69b2",
                         marginTop: "0",
                         marginBottom: '0',
                         display: "flex",
                         flexDirection: "row",
-                        height: "48px",
+                        height: "32px",
                         alignItems: 'center',
                     }}
                 >
@@ -263,11 +279,15 @@ function getProfileSection(user, isCollapsed) {
                     ) : null}
                 </div>
                 <div style={{
+                    height: '8px',
+                }}></div>
+                <div style={{
+                    //backgroundColor: "#205f9d",
                     marginTop: "0",
                     marginBottom: '0',
                     display: "flex",
                     flexDirection: "row",
-                    height: "48px",
+                    height: "32px",
                     alignItems: 'center',
                 }}>
                     <p
@@ -275,7 +295,7 @@ function getProfileSection(user, isCollapsed) {
                             marginTop: "0",
                             marginBottom: '0',
                             color: "#71767b",
-                            marginLeft: isCollapsed ? '16px' : '0',
+                            marginLeft: isOneLine ? '8px' : '0',
                         }}
                     >@{user.screen_name}</p>
                 </div>
@@ -293,7 +313,7 @@ function getParentPost(parent) {
             display: 'flex',
             flexDirection: 'column',
         }}>
-            {getProfileSection(parent.user, false)}
+            {getProfileSection(parent.user, false, false)}
             <div style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -315,30 +335,26 @@ function getParentPost(parent) {
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
+                    marginBottom: '16px',
+                    width: parentPostWidth,
                 }}>
-                    <p style={{ whiteSpace: "pre-line", margin: 0, fontSize: "32"}}> {
-                        parent.text.slice(parent.display_text_range[0], parent.display_text_range[1])
-                    }</p>
+                    {getTextSection(parent.text, parent.display_text_range, parentPostWidth)}
                     {(hasMedia) ? (
-                        <img style={{
-                            marginTop: '24px',
-                            borderRadius: '8px',
-                            maxWidth: '100%',
-                            maxHeight: '500px',
-                            // objectFit: 'cover',
-                        }} src={parent.mediaDetails[0].media_url_https} alt=""/>
+                        getMediaBySize(parent.mediaDetails, baseImageHeight, parentPostWidth)
                     ) : null}
                     {(isQuote) ? (
-                        getQuoteSection(parent.quoted_tweet)
+                        getQuoteSection(parent.quoted_tweet, parentPostWidth)
                     ) : null}
                 </div>
-
             </div>
         </div>
     )
 }
 
-function getQuoteSection(quote) {
+function getQuoteSection(quote, width) {
+    // padding + margin top
+    console.log("Adding height for quote: ", "40")
+    totalHeight = totalHeight + 40;
     const sectionSize = 168;
     /*
     height calc
@@ -363,27 +379,31 @@ function getQuoteSection(quote) {
             padding: '16px',
             flexDirection: 'column',
             maxHeight:'256px',
-            width: postWidth,
+            width: width,
             marginTop: '8px',
         }}>
-            {getProfileSection(quote.user, true)}
+            {getProfileSection(quote.user, true, true)}
             <div style={{
                 marginTop: '8px',
                 display: 'flex',
                 flexDirection: 'row',
             }}>
                 {(hasMedia) ? (
-                    getMediaBySize(quote.mediaDetails, sectionSize, sectionSize)
+                    <>
+                        {getMediaBySize(quote.mediaDetails, sectionSize, sectionSize)}
+                        <div style={{width:'16px'}}></div>
+                    </>
                 ) : null}
-                <p style={{ whiteSpace: "pre-line", margin: 0, fontSize: "32", textWrap: "wrap"}}> {
-                    quote.text.slice(quote.display_text_range[0], quote.display_text_range[1])
-                }</p>
+                {getTextSection(quote.text, quote.display_text_range, width)}
             </div>
         </div>
     );
 }
 
 function getMediaBySize(mediaDetails, height, width) {
+    totalHeight = totalHeight + height;
+    console.log("Adding height for media: ", height);
+
     return (
         <div style={{
             display: 'flex',
@@ -524,6 +544,7 @@ function getMediaBySize(mediaDetails, height, width) {
     )
 
 }
+
 function getFormattedDate(timestamp) {
     // Create a Date object
     const date = new Date(timestamp);
@@ -544,6 +565,40 @@ function getFormattedDate(timestamp) {
     const formattedString = `${formattedTime} · ${formattedDate}`;
 
     return formattedString;
+}
+
+function getSizeByText(text, width, fontSize) {
+    // Assuming each character is 0.6 * fontSize in width on average
+    const averageCharWidth = fontSize * 0.5;
+
+    // Line height is roughly the font size (you can adjust it slightly based on your needs)
+    const lineHeight = fontSize * 1.2; // 1.2 is a common line-height multiplier
+
+    // Split the text by newline characters to handle manual line breaks
+    const lines = text.split('\n');
+    let totalLines = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        // Check if the current line is empty (i.e., due to \n\n)
+        if (line === '') {
+            totalLines += 1; // Add an empty line
+            continue;
+        }
+
+        // Calculate the number of characters that fit in one line
+        const maxCharsPerLine = Math.floor(width / averageCharWidth);
+
+        // Calculate the number of lines needed for this text
+        const lineCount = Math.ceil(line.length / maxCharsPerLine);
+        totalLines += lineCount;
+    }
+
+    // Total height is the number of lines times the line height
+    const totalHeight = totalLines * lineHeight;
+
+    return Math.round(totalHeight);
 }
 
 function getToken(id) {
@@ -577,7 +632,6 @@ async function fetchTweet(id, fetchOptions) {
         'tfw_tweet_edit_frontend:on'
     ].join(';'));
     url.searchParams.set('token', getToken(id));
-    console.log(url.toString());
     const res = await fetch(url.toString(), fetchOptions);
     const isJson = (_res_headers_get = res.headers.get('content-type')) == null ? void 0 : _res_headers_get.includes('application/json');
     const data = isJson ? await res.json() : undefined;
