@@ -1,7 +1,8 @@
 import { ImageResponse } from 'next/og';
 
+// test posts
+// quote img 1828170548670525803
 export const runtime = 'edge'
-import { createCanvas } from "canvas";
 
 // App router includes @vercel/og.
 // No need to install it.
@@ -121,12 +122,7 @@ export async function GET(request) {
                 {getProfileSection(user, false, false)}
                 {getTextSection(tweet.data.text, tweet.data.display_text_range, postWidth, "24px 0 0 0")}
                 {(hasMedia) ? (
-                        <div style={{
-                            display: 'flex',
-                            marginTop: '24px',
-                        }}>
-                            {getMediaBySize(tweet.data.mediaDetails, baseImageHeight, postWidth)}
-                        </div>
+                    getMediaBySize(tweet.data.mediaDetails, baseImageHeight, postWidth, 24)
                 ) : null}
                 {isQuote ? (
                     getQuoteSection(tweet.data.quoted_tweet, postWidth)
@@ -174,17 +170,30 @@ export async function GET(request) {
     );
 }
 
-function getTextSection(text, displayRange, width, margin) {
-    const textHeight = getSizeByText(text, width, 32);
+function getTextSection(text, displayRange, width, margin, maxHeight, addToHeight = true) {
+    let textHeight = getSizeByText(text, width, 32, displayRange);
 
-    console.log("Adding height for text: ", textHeight);
-    totalHeight = totalHeight + textHeight;
+    if (maxHeight !== undefined && textHeight > maxHeight) {
+        console.log("Text too long, truncating")
+        // - 10 otherwise it cuts of half of the last line
+        textHeight = maxHeight - 10;
+    }
+
+    // quote does not add to height when image is already added
+    if (addToHeight) {
+        console.log("Adding height for text: ", textHeight);
+        totalHeight = totalHeight + textHeight;
+    }
+
     return (
         <div style={{
             margin: margin ?? '0',
             display:"flex",
             height: textHeight,
             width: width,
+            textOverflow: "ellipsis",
+            //backgroundColor: "#1f69b2",
+            overflow: "hidden",
         }}>
             <p style={{
                 whiteSpace: "pre-line",
@@ -194,7 +203,8 @@ function getTextSection(text, displayRange, width, margin) {
                 width: width,
                 wordWrap: "break-word",
                 // known bug with 1827400923154366799 on @NASA_astronauts
-                // wordBreak: "break-all",
+
+                textOverflow: "ellipsis"
             }}>
                 {text.slice(displayRange[0], displayRange[1])}
             </p>
@@ -204,9 +214,10 @@ function getTextSection(text, displayRange, width, margin) {
 
 function getProfileSection(user, isDense, isOneLine) {
     const hasBadge = user.highlighted_label !== undefined;
-    const isSquare = user.profile_image_shape === 'Square';
+    const isSquare = user.profile_image_shape === 'Square' || user.verified_type === 'Government';
     const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
-    const checkMarkColor = user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
+    const checkMarkColor = user.verified_type === 'Government' ? '#829aab' : user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
+    const isVerified = user.is_blue_verified || user.verified_type === 'Business' || user.is_business_verified;
 
     const height = isDense ? 48 : 96;
     const width = isDense ? 48 : 96;
@@ -257,7 +268,7 @@ function getProfileSection(user, isDense, isOneLine) {
                             fontFamily: "Chirp-Heavy",
                         }}
                     >{user.name}</p>
-                    {(user.is_blue_verified) ? (
+                    {(isVerified) ? (
                         // to change size of svg, just change the height
                         <svg viewBox="2 2 18 18" height="32">
                             <g>
@@ -343,7 +354,7 @@ function getParentPost(parent) {
                         getMediaBySize(parent.mediaDetails, baseImageHeight, parentPostWidth)
                     ) : null}
                     {(isQuote) ? (
-                        getQuoteSection(parent.quoted_tweet, parentPostWidth)
+                        getQuoteSection(parent.quoted_tweet, parentPostWidth, false)
                     ) : null}
                 </div>
             </div>
@@ -351,7 +362,7 @@ function getParentPost(parent) {
     )
 }
 
-function getQuoteSection(quote, width) {
+function getQuoteSection(quote, width, isDense = true) {
     // padding + margin top
     console.log("Adding height for quote: ", "40")
     totalHeight = totalHeight + 40;
@@ -370,6 +381,8 @@ function getQuoteSection(quote, width) {
     */
 
     const hasMedia = quote.mediaDetails !== undefined;
+
+    const textWidth = hasMedia ?  width - sectionSize - 48 : width - 32;
 
     return (
         <div style={{
@@ -394,18 +407,19 @@ function getQuoteSection(quote, width) {
                         <div style={{width:'16px'}}></div>
                     </>
                 ) : null}
-                {getTextSection(quote.text, quote.display_text_range, width)}
+                {getTextSection(quote.text, quote.display_text_range, textWidth, 0, sectionSize, !hasMedia)}
             </div>
         </div>
     );
 }
 
-function getMediaBySize(mediaDetails, height, width) {
-    totalHeight = totalHeight + height;
+function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
+    totalHeight = totalHeight + height + marginTop;
     console.log("Adding height for media: ", height);
 
     return (
         <div style={{
+            marginTop: marginTop,
             display: 'flex',
             flexDirection: 'row',
             width: width,
@@ -567,7 +581,14 @@ function getFormattedDate(timestamp) {
     return formattedString;
 }
 
-function getSizeByText(text, width, fontSize) {
+function getSizeByText(text, width, fontSize, displayRange) {
+    text = text.slice(displayRange[0], displayRange[1]);
+    console.log("Calculating height for text: ", text);
+
+    if (text === '') {
+        console.log("Text is empty")
+        return 0;
+    }
     // Assuming each character is 0.6 * fontSize in width on average
     const averageCharWidth = fontSize * 0.5;
 
