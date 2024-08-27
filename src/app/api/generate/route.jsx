@@ -4,9 +4,6 @@ import { ImageResponse } from 'next/og';
 // quote img 1828170548670525803
 export const runtime = 'edge'
 
-// App router includes @vercel/og.
-// No need to install it.
-
 const width = 1040;
 /*
     width - 2x padding - big profile - margin
@@ -30,7 +27,7 @@ const baseHeight = 168;
 
   always:
   48px padding top
-  24px padding top on text
+  24px padding top on text --
   24px padding top on date
   24px font date text
   48px padding bottom
@@ -362,10 +359,10 @@ function getParentPost(parent) {
     )
 }
 
-function getQuoteSection(quote, width, isDense = true) {
+function getQuoteSection(quote, width, isDense = true, marginTop) {
     // padding + margin top
     console.log("Adding height for quote: ", "40")
-    totalHeight = totalHeight + 40;
+    totalHeight = totalHeight + 56;
     const sectionSize = 168;
     /*
     height calc
@@ -391,9 +388,9 @@ function getQuoteSection(quote, width, isDense = true) {
             border: '2px solid #38444d',
             padding: '16px',
             flexDirection: 'column',
-            maxHeight:'256px',
+            maxHeight: '256px',
             width: width,
-            marginTop: '8px',
+            marginTop: '24px',
         }}>
             {getProfileSection(quote.user, true, true)}
             <div style={{
