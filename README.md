@@ -42,6 +42,9 @@ This project uses [@vercel/og](https://vercel.com/docs/concepts/functions/edge-f
     - █ ░ and many more
 - [ ] **Post Information**:
     - Show likes, quotes, replies and impressions (optional).
+- [ ] **Long names**:
+    - Handle long names by truncating them and adding ellipsis.
+    - example issue: '1828170548670525803'
 
 ## Usage
 
