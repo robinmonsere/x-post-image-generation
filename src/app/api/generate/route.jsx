@@ -21,17 +21,17 @@ const parentPostWidth = 832;
  */
 const baseImageHeight = 550;
 
-const baseHeight = 168;
+const baseHeight = 144;
 /*
   height calc
 
   always:
-  48px padding top
+  24px padding top
   24px padding top on text --
   24px padding top on date
   24px font date text
   48px padding bottom
-  = 168
+  = 144
 
   24px padding top on media
 
@@ -41,6 +41,7 @@ let totalHeight = baseHeight;
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const tweetID = searchParams.get('id');
+
 
     const chirp_regular = await fetch(
         new URL('../../../../assets/Chirp-Regular.ttf', import.meta.url),
@@ -66,9 +67,19 @@ export async function GET(request) {
     let user = tweet.data.user;
     // console.log(user.highlighted_label);
     const hasMedia = tweet.data.mediaDetails !== undefined;
-    const isRepost = false;
     const isQuote = tweet.data.quoted_tweet !== undefined;
     const isReply = tweet.data.parent !== undefined;
+    const isRepost = searchParams.get('repost') === 'true';
+
+    const repostHeight = 32;
+    const repostMarginHeight = 16;
+    // adding height for repost text
+    if (isRepost) {
+        console.log("Adding height for repost icon and text + margin: ", repostHeight + repostMarginHeight);
+        console.log(totalHeight);
+        totalHeight = totalHeight + repostHeight + repostMarginHeight;
+        console.log(totalHeight);
+    }
 
 
     return new ImageResponse(
@@ -83,7 +94,7 @@ export async function GET(request) {
                     fontSize: '32px',
                     backgroundColor: '#15202b',
                     color: '#fff',
-                    padding: '48px',
+                    padding: '24px 48px 48px 48px',
                 }}
             >
                 {isReply ? (
@@ -92,8 +103,8 @@ export async function GET(request) {
                 {isRepost ? (
                     <div style={{
                         display: 'flex',
-                        height: '32px',
-                        marginBottom: '16px',
+                        height: repostHeight,
+                        marginBottom: repostMarginHeight,
                     }}>
                         <div
                         style={{
@@ -348,7 +359,7 @@ function getParentPost(parent) {
                 }}>
                     {getTextSection(parent.text, parent.display_text_range, parentPostWidth)}
                     {(hasMedia) ? (
-                        getMediaBySize(parent.mediaDetails, baseImageHeight, parentPostWidth)
+                        getMediaBySize(parent.mediaDetails, baseImageHeight, parentPostWidth, 24)
                     ) : null}
                     {(isQuote) ? (
                         getQuoteSection(parent.quoted_tweet, parentPostWidth, false)
@@ -412,7 +423,7 @@ function getQuoteSection(quote, width, isDense = true, marginTop) {
 
 function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
     totalHeight = totalHeight + height + marginTop;
-    console.log("Adding height for media: ", height);
+    console.log("Adding height for media: ", height + marginTop);
 
     return (
         <div style={{
