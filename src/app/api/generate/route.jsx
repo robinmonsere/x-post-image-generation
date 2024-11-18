@@ -65,6 +65,8 @@ export async function GET(request) {
 
     //console.log(tweet);
     let user = tweet.data.user;
+    console.log(tweet)
+    console.log(user)
     // console.log(user.highlighted_label);
     const hasMedia = tweet.data.mediaDetails !== undefined;
     const isQuote = tweet.data.quoted_tweet !== undefined;
@@ -221,8 +223,9 @@ function getTextSection(text, displayRange, width, margin, maxHeight, addToHeigh
 }
 
 function getProfileSection(user, isDense, isOneLine) {
+    //console.log(user)
     const hasBadge = user.highlighted_label !== undefined;
-    const isSquare = user.profile_image_shape === 'Square' || user.verified_type === 'Government';
+    const isSquare = user.profile_image_shape === 'Square' || user.verified_type === 'Government' || user.verified_type === 'Business';
     const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
     const checkMarkColor = user.verified_type === 'Government' ? '#829aab' : user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
     const isVerified = user.is_blue_verified || user.verified_type === 'Business' || user.is_business_verified;
