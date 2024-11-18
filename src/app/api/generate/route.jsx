@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import {getImageBlurSvg} from "next/dist/shared/lib/image-blur-svg";
 
 // test posts
 // quote img 1828170548670525803
@@ -222,16 +223,53 @@ function getTextSection(text, displayRange, width, margin, maxHeight, addToHeigh
     )
 }
 
+/// [isDense] will shrink the width and height of the profile image
+/// [isOneLine] will make the profile section one line
 function getProfileSection(user, isDense, isOneLine) {
     //console.log(user)
     const hasBadge = user.highlighted_label !== undefined;
-    const isSquare = user.profile_image_shape === 'Square' || user.verified_type === 'Government' || user.verified_type === 'Business';
+
+    // make sure to override the isSquare when shape is Circle, for some government accounts like @joeBiden
+    const isSquare = user.profile_image_shape === "Circle"
+        ? false
+        : user.profile_image_shape === "Square" || user.verified_type === "Government" || user.verified_type === "Business";
     const profileImage = user.profile_image_url_https.replace('_normal', '_400x400');
-    const checkMarkColor = user.verified_type === 'Government' ? '#829aab' : user.verified_type === 'Business' ? '#e2b719' : '#1da1f2';
     const isVerified = user.is_blue_verified || user.verified_type === 'Business' || user.is_business_verified;
+    const verifiedType = user.verified_type ?? 'Verified';
+
+    const verifiedIcons = {
+        Government: (
+            <svg viewBox="0 0 22 22" height="32">
+                <g>
+                    <path clipRule="evenodd" fill="#829AAB" fillRule="evenodd" d="M12.096 1.673c-.593-.635-1.599-.635-2.192 0L8.452 3.227c-.296.316-.714.49-1.147.474L5.18 3.63c-.867-.03-1.579.682-1.55 1.55l.072 2.125c.015.433-.158.851-.474 1.147L1.673 9.904c-.635.593-.635 1.599 0 2.192l1.554 1.452c.316.296.49.714.474 1.147L3.63 16.82c-.03.867.682 1.579 1.55 1.55l2.125-.072c.433-.015.851.158 1.147.474l1.452 1.555c.593.634 1.599.634 2.192 0l1.452-1.555c.296-.316.714-.49 1.147-.474l2.126.071c.867.03 1.579-.682 1.55-1.55l-.072-2.125c-.015-.433.158-.851.474-1.147l1.555-1.452c.634-.593.634-1.599 0-2.192l-1.555-1.452c-.316-.296-.49-.714-.474-1.147l.071-2.126c.03-.867-.682-1.579-1.55-1.55l-2.125.072c-.433.015-.851-.158-1.147-.474l-1.452-1.554zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                </g>
+            </svg>
+        ),
+        Business: (
+            <svg viewBox="0 0 22 22" height="32">
+                <g>
+                    <path fill="url(#paint0_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd" d="M13.596 3.011L11 .5 8.404 3.011l-3.576-.506-.624 3.558-3.19 1.692L2.6 11l-1.586 3.245 3.19 1.692.624 3.558 3.576-.506L11 21.5l2.596-2.511 3.576.506.624-3.558 3.19-1.692L19.4 11l1.586-3.245-3.19-1.692-.624-3.558-3.576.506zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                    <path fill="url(#paint1_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd" d="M13.348 3.772L11 1.5 8.651 3.772l-3.235-.458-.565 3.219-2.886 1.531L3.4 11l-1.435 2.936 2.886 1.531.565 3.219 3.235-.458L11 20.5l2.348-2.272 3.236.458.564-3.219 2.887-1.531L18.6 11l1.435-2.936-2.887-1.531-.564-3.219-3.236.458zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                    <path fill="#D18800" fillRule="evenodd" clipRule="evenodd" d="M6 11.39l3.74 3.74 6.197-6.767h.003V9.76l-6.2 6.77L6 12.79v-1.4zm0 0z"/><linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_8728_433881" x1="4" x2="19.5" y1="1.5" y2="22"><stop stopColor="#F4E72A" id="stop8"/><stop offset=".539" stopColor="#CD8105" id="stop10"/><stop offset=".68" stopColor="#CB7B00" id="stop12"/><stop offset="1" stopColor="#F4EC26" id="stop14"/><stop offset="1" stopColor="#F4E72A" id="stop16"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" id="paint1_linear_8728_433881" x1="5" x2="17.5" y1="2.5" y2="19.5"><stop stopColor="#F9E87F" id="stop19"/><stop offset=".406" stopColor="#E2B719" id="stop21"/><stop offset=".989" stopColor="#E2B719" id="stop23"/></linearGradient>
+                </g>
+            </svg>
+        ),
+        Verified: (
+            <svg viewBox="2 2 18 18" height="32">
+                <g>
+                    <path fill='#1da1f2'
+                          d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z">
+                    </path>
+                </g>
+            </svg>
+        ),
+    };
+
+    const VerifiedIconComponent =
+        verifiedIcons[verifiedType] || null;
 
     const height = isDense ? 48 : 96;
-    const width = isDense ? 48 : 96;
+    const profilePicWidth = isDense ? 48 : 96;
 
     console.log("Adding height for profile picture: ", height)
     totalHeight = totalHeight + height;
@@ -248,8 +286,8 @@ function getProfileSection(user, isDense, isOneLine) {
             <img style={{
                 borderRadius: isSquare ? '5%' : '50%',
                 height: height,
-                width: width,
-                marginRight: '16px',
+                width: profilePicWidth,
+                marginRight: isOneLine ? '10px' : '16px',
             }} src={profileImage} alt=""/>
             <div
                 style={{
@@ -259,7 +297,6 @@ function getProfileSection(user, isDense, isOneLine) {
                     flexDirection: isOneLine ? "row" : "column",
                 }}
             >
-
                 <div
                     style={{
                         //backgroundColor: "#1f69b2",
@@ -279,15 +316,19 @@ function getProfileSection(user, isDense, isOneLine) {
                             fontFamily: "Chirp-Heavy",
                         }}
                     >{user.name}</p>
+
                     {(isVerified) ? (
+                        VerifiedIconComponent
                         // to change size of svg, just change the height
+                        /*
                         <svg viewBox="2 2 18 18" height="32">
                             <g>
                                 <path  fill={checkMarkColor} d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z">
                                 </path>
-
                             </g>
                         </svg>
+
+                         */
                     ) : null}
                     {(hasBadge) ? (
                         <img style={
