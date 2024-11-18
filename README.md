@@ -35,6 +35,10 @@ This project uses [@vercel/og](https://vercel.com/docs/concepts/functions/edge-f
     - Single media items are cropped to fit within the generated image.
 
 ### Todo List
+- [x] **Correct business and government badges**:
+    - Add support for business and government badges.
+- [ ] **Links, Hashtags, and Mentions**:
+    - Add support for links, hashtags, and mentions.
 - [ ] **Responsive Media Handling**:
     - **Problem**: Media that is smaller than the width of the image will scale up, but how can the height be calculated to maintain aspect ratio?
 - [ ] **Unicode Support**:

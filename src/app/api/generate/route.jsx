@@ -1,5 +1,7 @@
-import { ImageResponse } from 'next/og';
+import {ImageResponse} from 'next/og';
 import {getImageBlurSvg} from "next/dist/shared/lib/image-blur-svg";
+import {prefixes} from "next/dist/build/output/log";
+import {Children, cloneElement} from "react";
 
 // test posts
 // quote img 1828170548670525803
@@ -40,7 +42,7 @@ const baseHeight = 144;
 let totalHeight = baseHeight;
 
 export async function GET(request) {
-    const { searchParams } = new URL(request.url);
+    const {searchParams} = new URL(request.url);
     const tweetID = searchParams.get('id');
 
 
@@ -64,15 +66,16 @@ export async function GET(request) {
 
     totalHeight = baseHeight;
 
-    //console.log(tweet);
+    console.log(tweet);
     let user = tweet.data.user;
-    console.log(tweet)
-    console.log(user)
-    // console.log(user.highlighted_label);
+
     const hasMedia = tweet.data.mediaDetails !== undefined;
     const isQuote = tweet.data.quoted_tweet !== undefined;
     const isReply = tweet.data.parent !== undefined;
     const isRepost = searchParams.get('repost') === 'true';
+    const hasCard = tweet.data.card !== undefined;
+
+    console.log(hasCard);
 
     const repostHeight = 32;
     const repostMarginHeight = 16;
@@ -110,16 +113,21 @@ export async function GET(request) {
                         marginBottom: repostMarginHeight,
                     }}>
                         <div
-                        style={{
-                            display:"flex",
-                            width: '96px',
-                            justifyContent: 'flex-end',
-                            alignItems: 'flex-end',
-                        }}>
+                            style={{
+                                display: "flex",
+                                width: '96px',
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
+                            }}>
                             <svg style={{
                                 height: '32px',
                                 width: '32px',
-                            }} viewBox="0 0 23 23" ><g><path fill="#71767b" d="M4.75 3.79l4.603 4.3-1.706 1.82L6 8.38v7.37c0 .97.784 1.75 1.75 1.75H13V20H7.75c-2.347 0-4.25-1.9-4.25-4.25V8.38L1.853 9.91.147 8.09l4.603-4.3zm11.5 2.71H11V4h5.25c2.347 0 4.25 1.9 4.25 4.25v7.37l1.647-1.53 1.706 1.82-4.603 4.3-4.603-4.3 1.706-1.82L18 15.62V8.25c0-.97-.784-1.75-1.75-1.75z"></path></g></svg>
+                            }} viewBox="0 0 23 23">
+                                <g>
+                                    <path fill="#71767b"
+                                          d="M4.75 3.79l4.603 4.3-1.706 1.82L6 8.38v7.37c0 .97.784 1.75 1.75 1.75H13V20H7.75c-2.347 0-4.25-1.9-4.25-4.25V8.38L1.853 9.91.147 8.09l4.603-4.3zm11.5 2.71H11V4h5.25c2.347 0 4.25 1.9 4.25 4.25v7.37l1.647-1.53 1.706 1.82-4.603 4.3-4.603-4.3 1.706-1.82L18 15.62V8.25c0-.97-.784-1.75-1.75-1.75z"></path>
+                                </g>
+                            </svg>
                         </div>
                         <p style={{
                             marginLeft: '16px',
@@ -129,11 +137,14 @@ export async function GET(request) {
                             fontSize: '24px',
                         }}>Elon Musk Reposted</p>
                     </div>
-                    ) : null}
+                ) : null}
                 {getProfileSection(user, false, false)}
-                {getTextSection(tweet.data.text, tweet.data.display_text_range, postWidth, "24px 0 0 0")}
+                {getTextSection(tweet.data.text, tweet.data.display_text_range, tweet.data.entities, postWidth, "24px 0 0 0")}
                 {(hasMedia) ? (
                     getMediaBySize(tweet.data.mediaDetails, baseImageHeight, postWidth, 24)
+                ) : null}
+                {(hasCard) ? (
+                    getCardSection(tweet.data.card, postWidth)
                 ) : null}
                 {isQuote ? (
                     getQuoteSection(tweet.data.quoted_tweet, postWidth)
@@ -177,15 +188,99 @@ export async function GET(request) {
                 },
             ],
         },
-
     );
 }
 
-function getTextSection(text, displayRange, width, margin, maxHeight, addToHeight = true) {
+function getCardSection(card, width) {
+    const cardType = card.name;
+
+    // aaah
+
+
+    if (cardType === 'summary' || cardType === 'player') {
+        const values = card.binding_values;
+        let img_url;
+        let domain;
+        let description;
+        let title;
+
+        if (cardType === 'summary') {
+            img_url = values.thumbnail_image.image_value.url;
+            domain = values.domain.string_value;
+            description = values.description.string_value;
+            title = values.title.string_value;
+        }
+
+        if (cardType === 'player') {
+            img_url = values.player_image.image_value.url;
+            domain = values.domain.string_value;
+            description = values.description.string_value;
+            title = values.title.string_value;
+        }
+
+
+        const imageHeight = 168;
+        const imageWidth = 168;
+
+        totalHeight = totalHeight + 168 + 16;
+        return (
+            <div style={{
+                marginTop: '16px',
+                display: 'flex',
+                borderRadius: '16',
+                border: '1px solid #38444d',
+                height: imageHeight + 2,
+                width: width,
+                overflow: 'hidden',
+            }}>
+                <img style={{
+                    height: imageHeight,
+                    width: imageWidth,
+                    objectFit: 'cover',
+                }} src={img_url} alt=""/>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: imageHeight - 32,
+                    width: width - imageHeight - 32,
+                    margin: '16px',
+                    overflow: 'hidden',
+                    //backgroundColor: 'hotpink',
+                }}>
+                    <p style={{
+                        color: '#828f9c',
+                        fontSize: '20px',
+                        margin: '0 0 8px 0',
+                    }}>{domain}</p>
+                    <p style={{
+                        fontSize: '28px',
+                        margin: '0',
+                        paddingBottom: '15px',
+                        whiteSpace: 'nowrap', // Prevents wrapping to a new line
+                        overflow: 'hidden',
+                    }}>{title}</p>
+                    <p style={{
+                        color: '#828f9c',
+                        fontSize: '20px',
+                        margin: '0',
+                       // backgroundColor: 'hotpink',
+                        overflow: 'hidden',
+
+                    }}>{description}</p>
+                </div>
+            </div>
+        );
+    }
+    return null;
+}
+
+function getTextSection(text, displayRange, entities, width, margin, maxHeight, addToHeight = true) {
     let textHeight = getSizeByText(text, width, 32, displayRange);
 
+    // this will truncate the text if it is too high (NOT always when it's too long)
+    // examples could be when there is a lot of new lines
     if (maxHeight !== undefined && textHeight > maxHeight) {
-        console.log("Text too long, truncating")
+        console.log("Text too high, truncating")
         // - 10 otherwise it cuts of half of the last line
         textHeight = maxHeight - 10;
     }
@@ -196,25 +291,88 @@ function getTextSection(text, displayRange, width, margin, maxHeight, addToHeigh
         totalHeight = totalHeight + textHeight;
     }
 
+    // text display range is only for internal links like the link to the reposted post
+    // so it is definitely necessary to add the display range, but it's not enough.
+    // links to articles or videos are still included in the text, so we need to remove them too
+
+    /*
+    // Initial text element
+    let textElement = <p style={{
+        backgroundColor: "hotpink",
+    }}></p>;
+
+    let lastIndex = displayRange[0];
+
+    // Process user mentions and hashtags
+    const allEntities = [...(entities.user_mentions || []), ...(entities.hashtags || [])]
+        .sort((a, b) => a.indices[0] - b.indices[0]);
+
+    allEntities.forEach((entity) => {
+        const { indices } = entity;
+        if (indices[0] >= displayRange[0] && indices[1] <= displayRange[1]) {
+            // Add preceding text
+            if (lastIndex < indices[0]) {
+                textElement = cloneElement(
+                    textElement,
+                    {},
+                    ...Children.toArray(textElement.props.children),
+                    <pre key={`text-${lastIndex}`}>{text.slice(lastIndex, indices[0])}</pre>
+                );
+            }
+
+            // Add styled mention or hashtag
+            const entityText = text.slice(indices[0], indices[1]);
+            textElement = cloneElement(
+                textElement,
+                {},
+                ...Children.toArray(textElement.props.children),
+                <pre key={`entity-${indices[0]}`} style={{ color: '#1d9bf0' }}>{entityText}</pre>
+            );
+
+            lastIndex = indices[1];
+        }
+    });
+
+
+
+    // Add remaining text
+    if (lastIndex < displayRange[1]) {
+        textElement = cloneElement(
+            textElement,
+            {},
+            ...Children.toArray(textElement.props.children),
+            <pre key={`text-${lastIndex}`}>{text.slice(lastIndex, displayRange[1])}</pre>
+        );
+    }
+
+    console.log(textElement)
+
+    let texttest = <p>
+        <pre>Interesting comments from </pre>
+        <pre>@Gwynne_Shotwell</pre>
+        <pre> on regulations, China, and going faster. \n\nhttps://t.co/JaRgqPb1Po</pre>
+    </p>
+
+
+     */
     return (
         <div style={{
             margin: margin ?? '0',
-            display:"flex",
+            display: "flex",
             height: textHeight,
             width: width,
             textOverflow: "ellipsis",
-            //backgroundColor: "#1f69b2",
+           // backgroundColor: "#1f69b2",
             overflow: "hidden",
         }}>
             <p style={{
                 whiteSpace: "pre-line",
                 margin: 0,
                 fontSize: "32",
-                textWrap: "wrap",
-                width: width,
+                //textWrap: "wrap",
+                //width: width,
                 wordWrap: "break-word",
                 // known bug with 1827400923154366799 on @NASA_astronauts
-
                 textOverflow: "ellipsis"
             }}>
                 {text.slice(displayRange[0], displayRange[1])}
@@ -222,6 +380,23 @@ function getTextSection(text, displayRange, width, margin, maxHeight, addToHeigh
         </div>
     )
 }
+
+/*
+<p style={{
+    whiteSpace: "pre-line",
+    margin: 0,
+    fontSize: "32",
+    textWrap: "wrap",
+    width: width,
+    wordWrap: "break-word",
+    // known bug with 1827400923154366799 on @NASA_astronauts
+    textOverflow: "ellipsis"
+}}>
+    {text.slice(displayRange[0], displayRange[1])}
+
+</p>
+ */
+
 
 /// [isDense] will shrink the width and height of the profile image
 /// [isOneLine] will make the profile section one line
@@ -241,23 +416,41 @@ function getProfileSection(user, isDense, isOneLine) {
         Government: (
             <svg viewBox="0 0 22 22" height="32">
                 <g>
-                    <path clipRule="evenodd" fill="#829AAB" fillRule="evenodd" d="M12.096 1.673c-.593-.635-1.599-.635-2.192 0L8.452 3.227c-.296.316-.714.49-1.147.474L5.18 3.63c-.867-.03-1.579.682-1.55 1.55l.072 2.125c.015.433-.158.851-.474 1.147L1.673 9.904c-.635.593-.635 1.599 0 2.192l1.554 1.452c.316.296.49.714.474 1.147L3.63 16.82c-.03.867.682 1.579 1.55 1.55l2.125-.072c.433-.015.851.158 1.147.474l1.452 1.555c.593.634 1.599.634 2.192 0l1.452-1.555c.296-.316.714-.49 1.147-.474l2.126.071c.867.03 1.579-.682 1.55-1.55l-.072-2.125c-.015-.433.158-.851.474-1.147l1.555-1.452c.634-.593.634-1.599 0-2.192l-1.555-1.452c-.316-.296-.49-.714-.474-1.147l.071-2.126c.03-.867-.682-1.579-1.55-1.55l-2.125.072c-.433.015-.851-.158-1.147-.474l-1.452-1.554zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                    <path clipRule="evenodd" fill="#829AAB" fillRule="evenodd"
+                          d="M12.096 1.673c-.593-.635-1.599-.635-2.192 0L8.452 3.227c-.296.316-.714.49-1.147.474L5.18 3.63c-.867-.03-1.579.682-1.55 1.55l.072 2.125c.015.433-.158.851-.474 1.147L1.673 9.904c-.635.593-.635 1.599 0 2.192l1.554 1.452c.316.296.49.714.474 1.147L3.63 16.82c-.03.867.682 1.579 1.55 1.55l2.125-.072c.433-.015.851.158 1.147.474l1.452 1.555c.593.634 1.599.634 2.192 0l1.452-1.555c.296-.316.714-.49 1.147-.474l2.126.071c.867.03 1.579-.682 1.55-1.55l-.072-2.125c-.015-.433.158-.851.474-1.147l1.555-1.452c.634-.593.634-1.599 0-2.192l-1.555-1.452c-.316-.296-.49-.714-.474-1.147l.071-2.126c.03-.867-.682-1.579-1.55-1.55l-2.125.072c-.433.015-.851-.158-1.147-.474l-1.452-1.554zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
                 </g>
             </svg>
         ),
         Business: (
             <svg viewBox="0 0 22 22" height="32">
                 <g>
-                    <path fill="url(#paint0_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd" d="M13.596 3.011L11 .5 8.404 3.011l-3.576-.506-.624 3.558-3.19 1.692L2.6 11l-1.586 3.245 3.19 1.692.624 3.558 3.576-.506L11 21.5l2.596-2.511 3.576.506.624-3.558 3.19-1.692L19.4 11l1.586-3.245-3.19-1.692-.624-3.558-3.576.506zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
-                    <path fill="url(#paint1_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd" d="M13.348 3.772L11 1.5 8.651 3.772l-3.235-.458-.565 3.219-2.886 1.531L3.4 11l-1.435 2.936 2.886 1.531.565 3.219 3.235-.458L11 20.5l2.348-2.272 3.236.458.564-3.219 2.887-1.531L18.6 11l1.435-2.936-2.887-1.531-.564-3.219-3.236.458zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
-                    <path fill="#D18800" fillRule="evenodd" clipRule="evenodd" d="M6 11.39l3.74 3.74 6.197-6.767h.003V9.76l-6.2 6.77L6 12.79v-1.4zm0 0z"/><linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_8728_433881" x1="4" x2="19.5" y1="1.5" y2="22"><stop stopColor="#F4E72A" id="stop8"/><stop offset=".539" stopColor="#CD8105" id="stop10"/><stop offset=".68" stopColor="#CB7B00" id="stop12"/><stop offset="1" stopColor="#F4EC26" id="stop14"/><stop offset="1" stopColor="#F4E72A" id="stop16"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" id="paint1_linear_8728_433881" x1="5" x2="17.5" y1="2.5" y2="19.5"><stop stopColor="#F9E87F" id="stop19"/><stop offset=".406" stopColor="#E2B719" id="stop21"/><stop offset=".989" stopColor="#E2B719" id="stop23"/></linearGradient>
+                    <path fill="url(#paint0_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd"
+                          d="M13.596 3.011L11 .5 8.404 3.011l-3.576-.506-.624 3.558-3.19 1.692L2.6 11l-1.586 3.245 3.19 1.692.624 3.558 3.576-.506L11 21.5l2.596-2.511 3.576.506.624-3.558 3.19-1.692L19.4 11l1.586-3.245-3.19-1.692-.624-3.558-3.576.506zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                    <path fill="url(#paint1_linear_8728_433881)" fillRule="evenodd" clipRule="evenodd"
+                          d="M13.348 3.772L11 1.5 8.651 3.772l-3.235-.458-.565 3.219-2.886 1.531L3.4 11l-1.435 2.936 2.886 1.531.565 3.219 3.235-.458L11 20.5l2.348-2.272 3.236.458.564-3.219 2.887-1.531L18.6 11l1.435-2.936-2.887-1.531-.564-3.219-3.236.458zM6 11.39l3.74 3.74 6.2-6.77L14.47 7l-4.8 5.23-2.26-2.26L6 11.39z"/>
+                    <path fill="#D18800" fillRule="evenodd" clipRule="evenodd"
+                          d="M6 11.39l3.74 3.74 6.197-6.767h.003V9.76l-6.2 6.77L6 12.79v-1.4zm0 0z"/>
+                    <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_8728_433881" x1="4" x2="19.5"
+                                    y1="1.5" y2="22">
+                        <stop stopColor="#F4E72A" id="stop8"/>
+                        <stop offset=".539" stopColor="#CD8105" id="stop10"/>
+                        <stop offset=".68" stopColor="#CB7B00" id="stop12"/>
+                        <stop offset="1" stopColor="#F4EC26" id="stop14"/>
+                        <stop offset="1" stopColor="#F4E72A" id="stop16"/>
+                    </linearGradient>
+                    <linearGradient gradientUnits="userSpaceOnUse" id="paint1_linear_8728_433881" x1="5" x2="17.5"
+                                    y1="2.5" y2="19.5">
+                        <stop stopColor="#F9E87F" id="stop19"/>
+                        <stop offset=".406" stopColor="#E2B719" id="stop21"/>
+                        <stop offset=".989" stopColor="#E2B719" id="stop23"/>
+                    </linearGradient>
                 </g>
             </svg>
         ),
         Verified: (
             <svg viewBox="2 2 18 18" height="32">
                 <g>
-                    <path fill='#1da1f2'
+                    <path fill='#1d9bf0'
                           d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z">
                     </path>
                 </g>
@@ -316,19 +509,8 @@ function getProfileSection(user, isDense, isOneLine) {
                             fontFamily: "Chirp-Heavy",
                         }}
                     >{user.name}</p>
-
                     {(isVerified) ? (
                         VerifiedIconComponent
-                        // to change size of svg, just change the height
-                        /*
-                        <svg viewBox="2 2 18 18" height="32">
-                            <g>
-                                <path  fill={checkMarkColor} d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z">
-                                </path>
-                            </g>
-                        </svg>
-
-                         */
                     ) : null}
                     {(hasBadge) ? (
                         <img style={
@@ -371,6 +553,7 @@ function getProfileSection(user, isDense, isOneLine) {
 function getParentPost(parent) {
     const hasMedia = parent.mediaDetails !== undefined;
     const isQuote = parent.quoted_tweet !== undefined;
+    const hasCard = parent.card !== undefined;
     return (
         <div style={{
             display: 'flex',
@@ -401,9 +584,12 @@ function getParentPost(parent) {
                     marginBottom: '16px',
                     width: parentPostWidth,
                 }}>
-                    {getTextSection(parent.text, parent.display_text_range, parentPostWidth)}
+                    {getTextSection(parent.text, parent.display_text_range, parent.entities, parentPostWidth)}
                     {(hasMedia) ? (
                         getMediaBySize(parent.mediaDetails, baseImageHeight, parentPostWidth, 24)
+                    ) : null}
+                    {(hasCard) ? (
+                        getCardSection(parent.card, parentPostWidth)
                     ) : null}
                     {(isQuote) ? (
                         getQuoteSection(parent.quoted_tweet, parentPostWidth, false)
@@ -434,7 +620,7 @@ function getQuoteSection(quote, width, isDense = true, marginTop) {
 
     const hasMedia = quote.mediaDetails !== undefined;
 
-    const textWidth = hasMedia ?  width - sectionSize - 48 : width - 32;
+    const textWidth = hasMedia ? width - sectionSize - 48 : width - 32;
 
     return (
         <div style={{
@@ -456,10 +642,10 @@ function getQuoteSection(quote, width, isDense = true, marginTop) {
                 {(hasMedia) ? (
                     <>
                         {getMediaBySize(quote.mediaDetails, sectionSize, sectionSize)}
-                        <div style={{width:'16px'}}></div>
+                        <div style={{width: '16px'}}></div>
                     </>
                 ) : null}
-                {getTextSection(quote.text, quote.display_text_range, textWidth, 0, sectionSize, !hasMedia)}
+                {getTextSection(quote.text, quote.display_text_range, quote.entities, textWidth, 0, sectionSize, !hasMedia)}
             </div>
         </div>
     );
@@ -495,7 +681,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                                 objectFit: 'cover',
                             }}
                         />
-                        <div style={{height:'2px'}}></div>
+                        <div style={{height: '2px'}}></div>
                         <img
                             src={mediaDetails[1].media_url_https}
                             alt="media-1"
@@ -506,7 +692,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                             }}
                         />
                     </div>
-                    <div style={{width:'2px'}}></div>
+                    <div style={{width: '2px'}}></div>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -520,7 +706,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                                 objectFit: 'cover',
                             }}
                         />
-                        <div style={{height:'2px'}}></div>
+                        <div style={{height: '2px'}}></div>
                         <img
                             src={mediaDetails[3].media_url_https}
                             alt="media-1"
@@ -545,7 +731,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                             objectFit: 'cover',
                         }}
                     />
-                    <div style={{width:'2px'}}></div>
+                    <div style={{width: '2px'}}></div>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -559,7 +745,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                                 objectFit: 'cover',
                             }}
                         />
-                        <div style={{height:'2px'}}></div>
+                        <div style={{height: '2px'}}></div>
                         <img
                             src={mediaDetails[2].media_url_https}
                             alt="media-2"
@@ -583,7 +769,7 @@ function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
                             objectFit: 'cover',
                         }}
                     />
-                    <div style={{width:'2px'}}></div>
+                    <div style={{width: '2px'}}></div>
                     <img
                         src={mediaDetails[1].media_url_https}
                         alt="media-1"
@@ -623,7 +809,7 @@ function getFormattedDate(timestamp) {
     const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
 
 // Format the date part
-    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    const options = {month: 'short', day: 'numeric', year: 'numeric'};
     const formattedDate = date.toLocaleDateString('en-US', options);
 
 // Combine everything
@@ -677,9 +863,11 @@ function getSizeByText(text, width, fontSize, displayRange) {
 function getToken(id) {
     return (Number(id) / 1e15 * Math.PI).toString(6 ** 2).replace(/(0+|\.)/g, '');
 }
+
 const SYNDICATION_URL = 'https://cdn.syndication.twimg.com';
 
 const TWEET_ID = /^[0-9]+$/;
+
 async function fetchTweet(id, fetchOptions) {
     var _res_headers_get;
     if (id.length > 40 || !TWEET_ID.test(id)) {
@@ -731,7 +919,7 @@ async function fetchTweet(id, fetchOptions) {
 }
 
 class TwitterApiError extends Error {
-    constructor({ message, status, data }){
+    constructor({message, status, data}) {
         super(message);
         this.name = 'TwitterApiError';
         this.status = status;
