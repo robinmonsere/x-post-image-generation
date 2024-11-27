@@ -66,7 +66,7 @@ export async function GET(request) {
 
     totalHeight = baseHeight;
 
-    console.log(tweet);
+    //console.log(tweet);
     let user = tweet.data.user;
 
     const hasMedia = tweet.data.mediaDetails !== undefined;
@@ -194,18 +194,30 @@ export async function GET(request) {
 function getCardSection(card, width) {
     const cardType = card.name;
 
-    // aaah
+    // There are multiple different card types
+    // "summary": 1858641231984640118,
+    // "player": 1858598397491474823,
+    // "summary_large_image": 1858560300888240213,
 
 
-    if (cardType === 'summary' || cardType === 'player') {
+
+    // these are all from the ads-api
+    // IMAGE_APP, IMAGE_CAROUSEL_APP, IMAGE_CAROUSEL_WEBSITE,
+    // IMAGE_MULTI_DEST_CAROUSEL_WEBSITE,
+    // IMAGE_WEBSITE, MIXED_MEDIA_MULTI_DEST_CAROUSEL_WEBSITE,
+    // MIXED_MEDIA_SINGLE_DEST_CAROUSEL_APP, VIDEO_APP,
+    // MIXED_MEDIA_SINGLE_DEST_CAROUSEL_WEBSITE, VIDEO_CAROUSEL_APP,
+    // VIDEO_CAROUSEL_WEBSITE, VIDEO_MULTI_DEST_CAROUSEL_WEBSITE, VIDEO_WEBSITE
+
+    if (cardType === 'summary' || cardType === 'player' || cardType === 'summary_large_image') {
         const values = card.binding_values;
         let img_url;
         let domain;
         let description;
         let title;
 
-        if (cardType === 'summary') {
-            img_url = values.thumbnail_image.image_value.url;
+        if (cardType === 'summary' || cardType === 'summary_large_image') {
+            img_url = cardType === 'summary' ? values.thumbnail_image.image_value.url : values.thumbnail_image_original.image_value.url ;
             domain = values.domain.string_value;
             description = values.description.string_value;
             title = values.title.string_value;
@@ -216,6 +228,74 @@ function getCardSection(card, width) {
             domain = values.domain.string_value;
             description = values.description.string_value;
             title = values.title.string_value;
+        }
+
+        if (cardType === 'summary_large_image') {
+            let imageHeight = 450;
+            totalHeight = totalHeight + imageHeight + 26; // 26px for height and padding link.
+
+            return (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        position: "relative", // Enables positioning relative to the div
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            height: imageHeight,
+                            width: width,
+                            overflow: "hidden",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "24px",
+                            position: "relative", // Ensures the title can be absolutely positioned inside this div
+                        }}
+                    >
+                        <img
+                            style={{
+                                height: imageHeight,
+                                objectFit: "cover",
+                                width: width,
+                            }}
+                            src={img_url}
+                            alt=""
+                        />
+                        <p
+                            style={{
+                                position: "absolute",
+                                bottom: "10px", // Position title near the bottom of the image
+                                left: "10px", // Adds padding from the left
+                                margin: 0,
+                                color: "white",
+                                fontSize: "1.2rem",
+                                backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for readability
+                                padding: "4px 8px",
+                                borderRadius: "8px",
+                            }}
+                        >
+                            {title}
+                        </p>
+                    </div>
+                    <p style={{
+                        margin: "8px 0 0 0",
+                        textAlign: "center",
+                        color: '#8899a6',
+                        fontSize: "20px",
+                        lineHeight: "18px"
+                    }}>From {domain}</p>
+                </div>
+            );
+        }
+
+        console.log(description);
+
+        // truncate description if it is over 160 characters long, add ...
+
+        if (description.length > 160) {
+            description = description.slice(0, 157) + "...";
         }
 
 
@@ -242,7 +322,7 @@ function getCardSection(card, width) {
                     display: 'flex',
                     flexDirection: 'column',
                     height: imageHeight - 32,
-                    width: width - imageHeight - 32,
+                    width: width - imageWidth - 32,
                     margin: '16px',
                     overflow: 'hidden',
                     //backgroundColor: 'hotpink',
@@ -274,7 +354,26 @@ function getCardSection(card, width) {
     return null;
 }
 
+function removeUrlsFromText(text, entities) {
+    if (entities && entities.urls) {
+        // Sort URLs by their starting index in reverse order to avoid messing up indices
+        entities.urls.sort((a, b) => b.indices[0] - a.indices[0]);
+
+        // Remove each URL from the text
+        entities.urls.forEach(urlEntity => {
+            const [start, end] = urlEntity.indices;
+            text = text.slice(0, start) + text.slice(end);
+        });
+    }
+    return text.trim();
+}
+
 function getTextSection(text, displayRange, entities, width, margin, maxHeight, addToHeight = true) {
+    console.log(entities)
+    console.log(text)
+    text = removeUrlsFromText(text, entities)
+    console.log(text)
+
     let textHeight = getSizeByText(text, width, 32, displayRange);
 
     // this will truncate the text if it is too high (NOT always when it's too long)
