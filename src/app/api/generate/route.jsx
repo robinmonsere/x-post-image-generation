@@ -75,8 +75,6 @@ export async function GET(request) {
     const isRepost = searchParams.get('repost') === 'true';
     const hasCard = tweet.data.card !== undefined;
 
-    console.log(hasCard);
-
     const repostHeight = 32;
     const repostMarginHeight = 16;
     // adding height for repost text
@@ -290,14 +288,11 @@ function getCardSection(card, width) {
             );
         }
 
-        console.log(description);
-
         // truncate description if it is over 160 characters long, add ...
 
         if (description.length > 160) {
             description = description.slice(0, 157) + "...";
         }
-
 
         const imageHeight = 168;
         const imageWidth = 168;
@@ -368,11 +363,19 @@ function removeUrlsFromText(text, entities) {
     return text.trim();
 }
 
+function decodeHTMLEntities(text) {
+    const entities = {
+        "&amp;": "&",
+        "&lt;": "<",
+        "&gt;": ">"
+    };
+
+    return text.replace(/&[a-zA-Z0-9#]+;/g, match => entities[match] || match);
+}
+
 function getTextSection(text, displayRange, entities, width, margin, maxHeight, addToHeight = true) {
-    console.log(entities)
-    console.log(text)
     text = removeUrlsFromText(text, entities)
-    console.log(text)
+    text = decodeHTMLEntities(text)
 
     let textHeight = getSizeByText(text, width, 32, displayRange);
 
@@ -454,6 +457,69 @@ function getTextSection(text, displayRange, entities, width, margin, maxHeight, 
 
 
      */
+
+    /*
+    console.log(text)
+    // Split text into an array of spans while preserving words and newlines
+    const textArray = text
+        .slice(displayRange[0], displayRange[1])
+        .split(/(\s+)/) // Split by spaces, newlines, or other whitespace
+        //.filter(segment => segment.trim() || segment === "\n") // Keep non-empty segments and newlines
+        .map((segment, index) => (
+            <span key={index} style={{whiteSpace: "pre", backgroundColor: "hotpink"}}>
+      {segment}
+            </span>
+        ));
+
+    //console.log(textArray)
+    let test = [
+        <span key="0" style={{ whiteSpace: "pre" }}>Hello</span>,
+        <span key="1" style={{ whiteSpace: "pre" }}> </span>,
+        <span key="2" style={{ whiteSpace: "pre" }}>world!</span>,
+        <span key="3" style={{ whiteSpace: "pre-line" }}>{"\n"}</span>,
+        <br></br>,
+        <span key="4" style={{ whiteSpace: "pre" }}>This</span>,
+        <span key="5" style={{ whiteSpace: "pre" }}> </span>,
+        <span key="6" style={{ whiteSpace: "pre" }}>is</span>,
+        <span key="7" style={{ whiteSpace: "pre" }}> </span>,
+        <span key="8" style={{ whiteSpace: "pre" }}>a</span>,
+        <span key="9" style={{ whiteSpace: "pre" }}> </span>,
+        <span key="10" style={{ whiteSpace: "pre" }}>test.</span>,
+        <span key="11" style={{ whiteSpace: "pre" }}>\n\n</span>,
+        <span key="12" style={{ whiteSpace: "pre" }}>Newline</span>,
+        <span key="13" style={{ whiteSpace: "pre" }}> </span>,
+        <span key="14" style={{ whiteSpace: "pre" }}>here.</span>
+    ];
+    console.log(test)
+    return (
+        <div
+            style={{
+                margin: margin ?? "0",
+                display: "flex",
+                height: textHeight,
+                width: width,
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+            }}
+        >
+            <p
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    whiteSpace: "pre-line",
+                    margin: 0,
+                    fontSize: "32",
+                    wordWrap: "break-word",
+                    textOverflow: "ellipsis",
+                }}
+            >
+                {test}
+            </p>
+        </div>
+    );
+
+     */
+
     return (
         <div style={{
             margin: margin ?? '0',
@@ -563,7 +629,7 @@ function getProfileSection(user, isDense, isOneLine) {
     const height = isDense ? 48 : 96;
     const profilePicWidth = isDense ? 48 : 96;
 
-    console.log("Adding height for profile picture: ", height)
+    //console.log("Adding height for profile picture: ", height)
     totalHeight = totalHeight + height;
 
     return (
@@ -701,7 +767,7 @@ function getParentPost(parent) {
 
 function getQuoteSection(quote, width, isDense = true, marginTop) {
     // padding + margin top
-    console.log("Adding height for quote: ", "40")
+    //console.log("Adding height for quote: ", "40")
     totalHeight = totalHeight + 56;
     const sectionSize = 168;
     /*
@@ -752,7 +818,7 @@ function getQuoteSection(quote, width, isDense = true, marginTop) {
 
 function getMediaBySize(mediaDetails, height, width, marginTop = 0) {
     totalHeight = totalHeight + height + marginTop;
-    console.log("Adding height for media: ", height + marginTop);
+    //console.log("Adding height for media: ", height + marginTop);
 
     return (
         <div style={{
@@ -920,7 +986,7 @@ function getFormattedDate(timestamp) {
 
 function getSizeByText(text, width, fontSize, displayRange) {
     text = text.slice(displayRange[0], displayRange[1]);
-    console.log("Calculating height for text: ", text);
+    //console.log("Calculating height for text: ", text);
 
     if (text === '') {
         console.log("Text is empty")
