@@ -207,6 +207,8 @@ function getCardSection(card, width) {
     // MIXED_MEDIA_SINGLE_DEST_CAROUSEL_WEBSITE, VIDEO_CAROUSEL_APP,
     // VIDEO_CAROUSEL_WEBSITE, VIDEO_MULTI_DEST_CAROUSEL_WEBSITE, VIDEO_WEBSITE
 
+    console.log(cardType)
+    console.log(card)
     if (cardType === 'summary' || cardType === 'player' || cardType === 'summary_large_image') {
         const values = card.binding_values;
         let img_url;
@@ -215,17 +217,20 @@ function getCardSection(card, width) {
         let title;
 
         if (cardType === 'summary' || cardType === 'summary_large_image') {
-            img_url = cardType === 'summary' ? values.thumbnail_image.image_value.url : values.thumbnail_image_original.image_value.url ;
-            domain = values.domain.string_value;
-            description = values.description.string_value;
-            title = values.title.string_value;
+            img_url = cardType === 'summary'
+                ? values.thumbnail_image?.image_value?.url ?? ""
+                : values.thumbnail_image_original?.image_value?.url ?? "";
+
+            domain = values.domain?.string_value ?? "";
+            description = values.description?.string_value ?? "";
+            title = values.title?.string_value ?? "";
         }
 
         if (cardType === 'player') {
-            img_url = values.player_image.image_value.url;
-            domain = values.domain.string_value;
-            description = values.description.string_value;
-            title = values.title.string_value;
+            img_url = values.player_image?.image_value?.url ?? "";
+            domain = values.domain?.string_value ?? "";
+            description = values.description?.string_value ?? "";
+            title = values.title?.string_value ?? "";
         }
 
         if (cardType === 'summary_large_image') {
